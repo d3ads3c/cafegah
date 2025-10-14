@@ -128,7 +128,7 @@ export default function Footer() {
                 {/* Namads */}
                 <div className='flex w-full items-center gap-4 justify-end mt-10'>
                     <div className='size-32 rounded-2xl p-3 bg-white'>
-                        <a referrerPolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=4552683&Code=qyknEybElaLSRGJsWgxcqOV4NJYZ6aal'><img referrerPolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=4552683&Code=qyknEybElaLSRGJsWgxcqOV4NJYZ6aal' alt='' code='qyknEybElaLSRGJsWgxcqOV4NJYZ6aal'></img></a>
+                        <a referrerPolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=4552683&Code=qyknEybElaLSRGJsWgxcqOV4NJYZ6aal'><img referrerPolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=4552683&Code=qyknEybElaLSRGJsWgxcqOV4NJYZ6aal' alt=''></img></a>
                     </div>
                 </div>
 
