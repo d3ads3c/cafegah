@@ -81,30 +81,37 @@ export default function Home() {
           `}
         </script>
       </Head>
-      <div className="py-10">
-        <main className="mx-40">
-          <div className="w-fit mx-auto py-2 px-5 bg-teal-100 text-teal-600 rounded-full font-bold mb-5">
+      <div className="py-6 sm:py-8 md:py-10">
+        <main className="mx-4 sm:mx-10 md:mx-20 lg:mx-40">
+          <div className="w-fit mx-auto py-2 px-3 sm:px-5 bg-teal-100 text-teal-600 rounded-full font-bold mb-5 text-xs sm:text-base">
             <h4>تخفیف ویژه بر روی پلن ویژه به مدت محدود</h4>
           </div>
-          <h1 className="text-[2.5rem] text-center font-bold">
+          <h1 className="text-2xl sm:text-3xl md:text-[2.5rem] text-center font-bold leading-tight">
             <span className="text-teal-600 !font-black">کافه گاه،</span> نرم افزار مدیریت پیشرفته و آسان کافه ها
           </h1>
-          <p className="text-center my-5 text-gray-600">نرم افزاری آسان و کارآمد در زمینه مدیریت کافه ها و منو آنلاین به همراه رابط کاربری آسان و کارآمد</p>
-          <div className="flex items-center gap-4 justify-center pb-8">
-            <Link href={"#prices"} className="text-white bg-teal-600 rounded-2xl text-sm font-bold shadow-xl shadow-teal-700/40 py-4 px-6" >مشاهده پلن ها</Link>
-            <Link href={"#prices"} className="text-teal-600 border border-teal-600 hover:bg-teal-600 hover:text-white duration-150 hover:shadow-xl hover:shadow-teal-700/40 rounded-2xl text-sm font-bold py-4 px-6" >دمو نرم افزار</Link>
+          <p className="text-center my-4 sm:my-5 text-gray-600 text-sm sm:text-base">نرم افزاری آسان و کارآمد در زمینه مدیریت کافه ها و منو آنلاین به همراه رابط کاربری آسان و کارآمد</p>
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center pb-6 sm:pb-8">
+            <Link href={"#prices"} className="w-full sm:w-auto text-white bg-teal-600 rounded-2xl text-sm font-bold shadow-xl shadow-teal-700/40 py-4 px-4 sm:px-6 text-center" >مشاهده پلن ها</Link>
+            <Link href={"#prices"} className="w-full sm:w-auto text-teal-600 border border-teal-600 hover:bg-teal-600 hover:text-white duration-150 hover:shadow-xl hover:shadow-teal-700/40 rounded-2xl text-sm font-bold py-4 px-4 sm:px-6 mt-3 md:mt-0 text-center" >دمو نرم افزار</Link>
           </div>
           <div>
-            <img src={"/img/herosection.png"} alt="hero section image" className="max-w-[1200px] mx-auto"></img>
+            <Image
+              src="/img/herosection.png"
+              alt="hero section image"
+              width={1200}
+              height={600}
+              quality={100}
+              className="w-full max-w-full sm:max-w-[700px] md:max-w-[900px] lg:max-w-[1200px] mx-auto rounded-2xl"
+              priority
+            />
           </div>
         </main>
-        {/* ...existing code... */}
-        <div className="my-2 px-40" id="features">
+        <div className="my-2 px-2 sm:px-6 md:px-16 lg:px-40 mt-12 md:mt-0" id="features">
           <h3 className="border rounded-full py-1.5 px-4 w-fit mx-auto border-gray-400 text-gray-500 shadow-xl bg-white text-center">قابلیت ها</h3>
           <h2 className="text-3xl font-bold text-center my-5">قابلیت هایی که <span className="text-teal-600 !font-black">کافه گاه</span> را متمایز میکند</h2>
           <p className="text-center">تمام تمرکز تیم کافه گاه راحتی کاربری برای مشتریان خود و ارائه قابلیت و امکانات پیشرفته که کافه گاه را متمایز نسبت به رقبای خود می کند.</p>
-          <div className="flex items-center gap-5 mt-10">
-            <div className="w-1/3 bg-white rounded-3xl border border-gray-200 h-[400px] p-4">
+          <div className="flex flex-col md:flex-row items-center gap-5 mt-8 md:mt-10">
+            <div className="w-full md:w-1/3 bg-white rounded-3xl border border-gray-200 h-max sm:h-[400px] p-4 mb-5 md:mb-0">
               <div className="min-h-[70%]">
                 <Image src={"/img/features/invoices.png"} width={2000} height={2000} quality={100} alt="Invoice Feature" className="max-w-[320px] mx-auto"></Image>
               </div>
@@ -115,7 +122,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="w-1/3 bg-white rounded-3xl border border-gray-200 h-[400px] p-4">
+            <div className="w-full md:w-1/3 bg-white rounded-3xl border border-gray-200 h-max sm:h-[400px] p-4 mb-5 md:mb-0">
               <div className="min-h-[70%]">
                 <Image src={"/img/features/online-menu.png"} width={2000} height={2000} quality={100} alt="Online Menu" className="max-w-[320px] mx-auto"></Image>
               </div>
@@ -126,7 +133,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="w-1/3 bg-white rounded-3xl border border-gray-200 h-[400px] p-4">
+            <div className="w-full md:w-1/3 bg-white rounded-3xl border border-gray-200 h-max sm:h-[400px] p-4">
               <div className="min-h-[70%]">
                 <Image src={"/img/features/customers-managment.png"} width={2000} height={2000} quality={100} alt="Customer Managment" className="max-w-[320px] mx-auto"></Image>
               </div>
@@ -138,19 +145,19 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-5 mt-5">
-            <div className="w-1/2 h-[300px] bg-white rounded-3xl border border-gray-200 p-4">
+          <div className="flex flex-col md:flex-row items-center gap-5 mt-5">
+            <div className="w-full md:w-1/2 h-max sm:h-[300px] bg-white rounded-3xl border border-gray-200 p-4 mb-5 md:mb-0">
               <div className="min-h-[70%]">
                 <Image src={"/img/features/mobile-application.png"} width={5000} height={2000} quality={100} alt="Mobile Application" className="rounded-2xl mx-auto"></Image>
               </div>
-              <div>
+              <div className="mt-3 md:mt-0">
                 <h3 className="text-xl font-bold">اپلیکیشن موبایل</h3>
                 <p className="text-sm text-gray-400 text-justify">
                   اپلیکیشن اختصاصی برای مدیریت کافه از راه دور، دسترسی به گزارش‌های فروش، مدیریت سفارشات و منو، با رابط کاربری ساده و کاربردی برای اندروید و iOS
                 </p>
               </div>
             </div>
-            <div className="w-1/2 h-[300px] bg-white rounded-3xl border border-gray-200 p-4">
+            <div className="w-full md:w-1/2 h-max sm:h-[300px] bg-white rounded-3xl border border-gray-200 p-4">
               <div className="min-h-[70%]">
                 <Image src={"/img/features/online-support.png"} width={5000} height={2000} quality={100} alt="Online Support" className="rounded-2xl mx-auto"></Image>
               </div>

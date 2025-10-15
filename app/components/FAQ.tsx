@@ -42,13 +42,13 @@ export default function FAQ() {
     };
 
     return (
-        <section className="mx-40 my-16" id='faq'>
+        <section className="md:mx-40 mx-3 my-16" id='faq'>
             <div className="text-center mb-12">
                 <h2 className="text-2xl font-black text-teal-600 mb-4">سوالات متداول</h2>
                 <p className="text-gray-500">پاسخ سوالات رایج شما درباره کافه گاه</p>
             </div>
             
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {faqs.map((faq, index) => (
                     <div 
                         key={faq.id}

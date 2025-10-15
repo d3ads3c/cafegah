@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 
 const features = [
     {
@@ -170,19 +171,24 @@ const plans = [
     }
 ];
 
-export default function PricingTable() {
+const PricingTable: React.FC = () => {
+    const [modalPlan, setModalPlan] = useState<null | typeof plans[0]>(null);
+    // Get features for a plan
+    const getPlanFeatures = (planKey: string) => {
+        return features.filter(f => f.plans.includes(planKey));
+    };
     return (
-        <section id="prices" className="mx-40 my-16 relative">
+        <section id="prices" className="mx-2 sm:mx-6 md:mx-16 lg:mx-40 my-10 sm:my-14 md:my-16 relative">
             {/* Header and pricing cards */}
-            <div className="sticky top-0 z-10 pt-6 pb-8 -mx-8 px-8 rounded-2xl backdrop-blur-xl">
-                <div className="grid grid-cols-4 gap-6">
-                    <div className="col-span-1">
-                        <div className="w-full min-h-full bg-teal-600 shadow-xl shadow-teal-600/40 text-white rounded-3xl p-8 flex items-center justify-center">
+            <div className="sticky top-0 z-10 pt-4 sm:pt-6 pb-6 sm:pb-8 -mx-2 sm:-mx-6 md:-mx-8 px-2 sm:px-6 md:px-8 rounded-2xl backdrop-blur-xl">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                    <div className="col-span-1 mb-4 md:mb-0">
+                        <div className="w-full min-h-full bg-teal-600 shadow-xl shadow-teal-600/40 text-white rounded-3xl p-5 sm:p-8 flex items-center justify-center">
                             <div>
-                                <h3 className="font-bold text-xl text-center">نیاز به مشاوره دارید؟</h3>
-                                <p className="text-justify my-3">میتوانید به صورت رایگان برای سیستم مدیریت کافه خود مشاوره دریافت کنید</p>
+                                <h3 className="font-bold text-lg sm:text-xl text-center">نیاز به مشاوره دارید؟</h3>
+                                <p className="text-justify my-2 sm:my-3 text-xs sm:text-base">میتوانید به صورت رایگان برای سیستم مدیریت کافه خود مشاوره دریافت کنید</p>
                                 <div className="text-center">
-                                    <button className="text-teal-600 bg-white rounded-2xl py-2.5 px-6 shadow-xl shadow-white/20 font-bold">تماس با ما</button>
+                                    <button className="text-teal-600 bg-white rounded-2xl py-2 px-4 sm:py-2.5 sm:px-6 shadow-xl shadow-white/20 font-bold text-xs sm:text-base">تماس با ما</button>
                                 </div>
                             </div>
                         </div>
@@ -190,15 +196,12 @@ export default function PricingTable() {
                     {plans.map((plan, idx) => (
                         <div
                             key={idx}
-                            className={`col-span-1 bg-white rounded-3xl border border-gray-200 p-8 shadow-xl ${plan.highlight ? "border-teal-600 scale-105" : ""
-                                }`}
+                            className={`col-span-1 bg-white rounded-3xl border border-gray-200 p-5 sm:p-8 shadow-xl ${plan.highlight ? "border-teal-600 md:scale-105" : ""}`}
                         >
-                            <h3 className={`text-xl font-bold mb-2 ${plan.highlight ? "text-teal-600" : ""}`}>
-                                {plan.title}
-                            </h3>
-                            <div className="text-3xl font-black mb-1">{plan.price}</div>
-                            <div className="text-gray-500 text-sm mb-4">تومان / {plan.period}</div>
-                            <p className="text-gray-600 text-sm mb-6">{plan.description}</p>
+                            <h3 className={`text-lg sm:text-xl font-bold mb-2 ${plan.highlight ? "text-teal-600" : ""}`}>{plan.title}</h3>
+                            <div className="text-2xl sm:text-3xl font-black mb-1">{plan.price}</div>
+                            <div className="text-gray-500 text-xs sm:text-sm mb-3 sm:mb-4">تومان / {plan.period}</div>
+                            <p className="text-gray-600 text-xs sm:text-sm mb-4 sm:mb-6">{plan.description}</p>
                             <button
                                 className={`w-full py-3 rounded-xl font-bold transition-all duration-200 ${plan.highlight
                                     ? "bg-teal-600 text-white hover:bg-teal-700"
@@ -207,6 +210,13 @@ export default function PricingTable() {
                             >
                                 انتخاب پلن
                             </button>
+                            {/* Mobile: Show features button */}
+                            <button
+                                className="block sm:hidden w-full mt-2 py-3 rounded-xl font-bold border border-teal-600 text-teal-600 bg-white hover:bg-teal-50 transition-all text-sm"
+                                onClick={() => setModalPlan(plan)}
+                            >
+                                مشاهده امکانات
+                            </button>
                         </div>
                     ))}
                 </div>
@@ -214,65 +224,90 @@ export default function PricingTable() {
             {/* End sticky header */}
 
             {/* Features comparison table */}
-            <div className="bg-white rounded-3xl border border-gray-200 p-8">
-                <div className="grid grid-cols-4 gap-6">
-                    <div className="col-span-1">
-                        <h3 className="text-lg font-bold text-gray-700 mb-6">امکانات و ویژگی‌ها</h3>
-                    </div>
-                    {plans.map((plan, idx) => (
-                        <div key={idx} className="col-span-1">
-                            <h4 className={`text-md font-bold mb-6 ${plan.highlight ? "text-teal-600" : "text-gray-700"}`}>
-                                {plan.title}
-                            </h4>
+            <div className="bg-white hidden md:block rounded-3xl border border-gray-200 p-2 sm:p-4 md:p-8 overflow-x-auto">
+                <div className="min-w-[600px] md:min-w-0">
+                    <div className="grid grid-cols-4 gap-4 sm:gap-6">
+                        <div className="col-span-1">
+                            <h3 className="text-base sm:text-lg font-bold text-gray-700 mb-4 sm:mb-6">امکانات و ویژگی‌ها</h3>
                         </div>
-                    ))}
-                </div>
-
-                {Object.entries(
-                    features.reduce((acc, feature) => {
-                        if (!acc[feature.category]) {
-                            acc[feature.category] = [];
-                        }
-                        acc[feature.category].push(feature);
-                        return acc;
-                    }, {} as Record<string, typeof features>)
-                ).map(([category, categoryFeatures], categoryIndex, categoriesArray) => (
-                    <div key={category} className={categoryIndex !== categoriesArray.length - 1 ? "border-b border-gray-100" : ""}>
-                        <div className="grid grid-cols-4 gap-6 py-6">
-                            <div className="col-span-1">
-                                <h4 className="text-md font-bold text-teal-600 mb-4">{category}</h4>
-                            </div>
-                        </div>
-                        {categoryFeatures.map((feature, featureIndex) => (
-                            <div key={feature.id} className="grid grid-cols-4 gap-6 py-3">
-                                <div className="col-span-1">
-                                    <div className="font-bold text-gray-700 mb-1">{feature.name}</div>
-                                    <p className="text-sm text-gray-500">{feature.desc}</p>
-                                </div>
-                                {plans.map((plan) => (
-                                    <div key={plan.key} className="col-span-1 flex items-center">
-                                        {feature.plans.includes(plan.key) ? (
-                                            <div className="flex items-center">
-                                                <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                                                </svg>
-                                                <span className="text-sm text-gray-700 mr-2">دارد</span>
-                                            </div>
-                                        ) : (
-                                            <div className="flex items-center">
-                                                <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                                <span className="text-sm text-gray-400 mr-2">ندارد</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                        {plans.map((plan, idx) => (
+                            <div key={idx} className="col-span-1">
+                                <h4 className={`text-sm sm:text-md font-bold mb-4 sm:mb-6 ${plan.highlight ? "text-teal-600" : "text-gray-700"}`}>{plan.title}</h4>
                             </div>
                         ))}
                     </div>
-                ))}
+
+                    {Object.entries(
+                        features.reduce((acc, feature) => {
+                            if (!acc[feature.category]) {
+                                acc[feature.category] = [];
+                            }
+                            acc[feature.category].push(feature);
+                            return acc;
+                        }, {} as Record<string, typeof features>)
+                    ).map(([category, categoryFeatures], categoryIndex, categoriesArray) => (
+                        <div key={category} className={categoryIndex !== categoriesArray.length - 1 ? "border-b border-gray-100" : ""}>
+                            <div className="grid grid-cols-4 gap-4 sm:gap-6 py-4 sm:py-6">
+                                <div className="col-span-1">
+                                    <h4 className="text-sm sm:text-md font-bold text-teal-600 mb-2 sm:mb-4">{category}</h4>
+                                </div>
+                            </div>
+                            {categoryFeatures.map((feature, featureIndex) => (
+                                <div key={feature.id} className="grid grid-cols-4 gap-4 sm:gap-6 py-2 sm:py-3">
+                                    <div className="col-span-1">
+                                        <div className="font-bold text-gray-700 mb-1 text-xs sm:text-base">{feature.name}</div>
+                                        <p className="text-xs sm:text-sm text-gray-500">{feature.desc}</p>
+                                    </div>
+                                    {plans.map((plan) => (
+                                        <div key={plan.key} className="col-span-1 flex items-center">
+                                            {feature.plans.includes(plan.key) ? (
+                                                <div className="flex items-center">
+                                                    <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    <span className="text-xs sm:text-sm text-gray-700 mr-2">دارد</span>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center">
+                                                    <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    <span className="text-xs sm:text-sm text-gray-400 mr-2">ندارد</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
             </div>
+            {/* Modal for plan features (mobile) */}
+            {modalPlan && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-3">
+                    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full mx-2 h-[70%] relative animate-fade-in">
+                        <button
+                            className="absolute left-4 top-4 text-gray-400 hover:text-gray-700 text-2xl"
+                            onClick={() => setModalPlan(null)}
+                            aria-label="بستن"
+                        >
+                            ×
+                        </button>
+                        <h2 className="text-lg font-bold mb-4 text-gray-900 text-center">امکانات {modalPlan.title}</h2>
+                        <ul className="space-y-3 max-h-[90%] overflow-y-auto pr-2">
+                            {getPlanFeatures(modalPlan.key).map((feature) => (
+                                <li key={feature.id} className="border-b border-gray-200 last:border-b-0 pb-2">
+                                    <div className="font-bold text-gray-700 text-sm mb-1">{feature.name}</div>
+                                    <div className="text-xs text-gray-500">{feature.desc}</div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }
+
+export default PricingTable;

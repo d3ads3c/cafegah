@@ -16,9 +16,11 @@ export default function RootLayout({
   return (
     <div>
       <Headbar />
-      {children}
-      <Footer />
-      <ChatWidget />
+      <div className="mt-28">
+        {children}
+        <Footer />
+        <ChatWidget />
+      </div>
     </div>
 
   );

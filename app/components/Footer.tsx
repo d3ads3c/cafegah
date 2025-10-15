@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Script from 'next/script';
 
 const footerLinks = {
     product: [
@@ -53,10 +54,10 @@ const footerLinks = {
 export default function Footer() {
     return (
         <footer className="bg-gray-50 border-t border-gray-100">
-            <div className="mx-auto max-w-7xl px-6 py-12 md:px-12 lg:px-20">
-                <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-12 lg:px-20 py-8 sm:py-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                     {/* Logo and Description */}
-                    <div className="col-span-2 md:col-span-1">
+                    <div className="col-span-1 flex flex-col items-start">
                         <Link href="/" className="flex items-center gap-2">
                             <Image
                                 src="/img/logo/192.png"
@@ -65,9 +66,9 @@ export default function Footer() {
                                 height={40}
                                 className="rounded-xl"
                             />
-                            <span className="text-xl font-black text-gray-900">کافه گاه</span>
+                            <span className="text-lg sm:text-xl font-black text-gray-900">کافه گاه</span>
                         </Link>
-                        <p className="mt-4 text-sm leading-6 text-gray-500">
+                        <p className="mt-3 sm:mt-4 text-xs sm:text-sm leading-6 text-gray-500">
                             سیستم مدیریت هوشمند کافه‌ها
                             <br />
                             ساده، سریع و کارآمد
@@ -75,9 +76,9 @@ export default function Footer() {
                     </div>
 
                     {/* Product Links */}
-                    <div>
-                        <h3 className="text-sm font-semibold text-gray-900">محصول</h3>
-                        <ul role="list" className="mt-4 space-y-3">
+                    <div className="mt-6 sm:mt-0">
+                        <h3 className="text-xs sm:text-sm font-semibold text-gray-900">محصول</h3>
+                        <ul role="list" className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
                             {footerLinks.product.map((item) => (
                                 <li key={item.name}>
                                     <Link
@@ -92,9 +93,9 @@ export default function Footer() {
                     </div>
 
                     {/* Company Links */}
-                    <div>
-                        <h3 className="text-sm font-semibold text-gray-900">شرکت</h3>
-                        <ul role="list" className="mt-4 space-y-3">
+                    <div className="mt-6 sm:mt-0">
+                        <h3 className="text-xs sm:text-sm font-semibold text-gray-900">شرکت</h3>
+                        <ul role="list" className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
                             {footerLinks.company.map((item) => (
                                 <li key={item.name}>
                                     <Link
@@ -109,9 +110,9 @@ export default function Footer() {
                     </div>
 
                     {/* Legal Links */}
-                    <div>
-                        <h3 className="text-sm font-semibold text-gray-900">قوانین</h3>
-                        <ul role="list" className="mt-4 space-y-3">
+                    <div className="mt-6 sm:mt-0">
+                        <h3 className="text-xs sm:text-sm font-semibold text-gray-900">قوانین</h3>
+                        <ul role="list" className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
                             {footerLinks.legal.map((item) => (
                                 <li key={item.name}>
                                     <Link
@@ -126,16 +127,23 @@ export default function Footer() {
                     </div>
                 </div>
                 {/* Namads */}
-                <div className='flex w-full items-center gap-4 justify-end mt-10'>
+                <div className='flex w-full flex-wrap items-center gap-4 justify-end mt-8 sm:mt-10'>
                     <div className='size-32 rounded-2xl p-3 bg-white'>
-                        <a referrerPolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=4552683&Code=qyknEybElaLSRGJsWgxcqOV4NJYZ6aal'><img referrerPolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=4552683&Code=qyknEybElaLSRGJsWgxcqOV4NJYZ6aal' alt=''></img></a>
+                        <a referrerPolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=4552683&Code=qyknEybElaLSRGJsWgxcqOV4NJYZ6aal'>
+                            <Image src={"/img/enamad.png"} width={1000} height={1000} alt='Enamad Logo'></Image>
+                        </a>
+                    </div>
+                    <div className='size-32 rounded-2xl p-3 bg-white'>
+                        <a target='_blank' href='https://gateway.zibal.ir/trustMe/cafegah.ir'>
+                            <Image src={"/img/zibal.jpg"} width={1000} height={1000} alt='Enamad Logo'></Image>
+                        </a>
                     </div>
                 </div>
 
                 {/* Bottom Section */}
-                <div className="mt-12 pt-8 border-t border-gray-100">
-                    <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-                        <div className="flex gap-x-4">
+                <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-100">
+                    <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                        <div className="flex gap-3 sm:gap-4">
                             {footerLinks.social.map((item) => (
                                 <Link
                                     key={item.name}
@@ -147,7 +155,7 @@ export default function Footer() {
                                 </Link>
                             ))}
                         </div>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-xs sm:text-sm text-gray-500 text-center">
                             © {new Date().getFullYear()} کافه گاه. تمامی حقوق محفوظ است.
                         </p>
                     </div>

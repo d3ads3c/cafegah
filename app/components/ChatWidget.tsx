@@ -52,7 +52,7 @@ export default function ChatWidget() {
             {/* Chat Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`fixed bottom-10 right-10 z-50 p-4 bg-teal-600 shadow-xl shadow-teal-600/40 text-white rounded-full hover:bg-teal-700 transition-all duration-300 ${isOpen ? 'scale-90' : 'scale-100 hover:scale-105'
+                className={`fixed md:bottom-10 bottom-5 right-5 md:right-10 z-30 p-4 bg-teal-600 shadow-xl shadow-teal-600/40 text-white rounded-full hover:bg-teal-700 transition-all duration-300 ${isOpen ? 'scale-90' : 'scale-100 hover:scale-105'
                     }`}
             >
                 {isOpen ? (
@@ -69,7 +69,7 @@ export default function ChatWidget() {
 
             {/* Chat Window */}
             <div
-                className={`fixed bottom-24 right-6 z-50 w-96 bg-white rounded-2xl shadow-2xl transition-all duration-300 transform ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
+                className={`fixed bottom-24 right-6 z-30 w-96 bg-white rounded-2xl shadow-2xl transition-all duration-300 transform ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
                     }`}
             >
                 {/* Header */}
