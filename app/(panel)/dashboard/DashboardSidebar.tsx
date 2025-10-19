@@ -46,7 +46,7 @@ export default function DashboardSidebar() {
     const pathname = usePathname();
 
     return (
-        <div className="w-64 bg-white border-l border-gray-200">
+        <div className={`w-64 bg-white border-l border-gray-200 ${pathname === '/dashboard/subscription/new' && "hidden"}`}>
             <div className="flex flex-col h-full">
                 {/* Logo */}
                 <div className="p-4 border-b border-gray-200">

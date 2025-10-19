@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 
 type Invoice = {
   invoiceId: string;
@@ -38,68 +39,67 @@ export default function InvoicesPage() {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-8 shadow-md">
-      <h1 className="text-2xl font-bold mb-6 text-gray-900">فاکتورها</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">شماره فاکتور</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاریخ</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">مبلغ</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">وضعیت</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">توضیحات</th>
-              <th className="px-6 py-3"></th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {invoices.map((invoice) => (
-              <tr key={invoice.invoiceId} className="hover:bg-gray-50 transition">
-                <td className="px-6 py-4 whitespace-nowrap font-mono">{invoice.invoiceId}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{invoice.date}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{invoice.amount} تومان</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${invoice.status === "موفق" ? "bg-emerald-100 text-emerald-600" : "bg-red-100 text-red-600"}`}>
-                    {invoice.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{invoice.description}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button
-                    className="text-teal-600 hover:text-teal-800 font-bold transition"
-                    onClick={() => setSelectedInvoice(invoice)}
-                  >
-                    مشاهده
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <>
+      <div className="mb-8">
+        <h1 className="text-2xl font-black text-gray-900">فاکتور ها</h1>
+        <p className="mt-2 text-gray-600">مشاهده فاکتور های شما</p>
       </div>
-
-      {/* Invoice Modal */}
-      {selectedInvoice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md relative animate-fade-in">
-            <button
-              className="absolute left-4 top-4 text-gray-400 hover:text-gray-700 text-2xl"
-              onClick={() => setSelectedInvoice(null)}
-              aria-label="بستن"
-            >
-              ×
-            </button>
-            <h2 className="text-xl font-bold mb-4 text-gray-900">جزئیات فاکتور</h2>
-            <div className="space-y-3 text-right">
-              <div><span className="font-semibold">شماره فاکتور:</span> {selectedInvoice.invoiceId}</div>
-              <div><span className="font-semibold">تاریخ:</span> {selectedInvoice.date}</div>
-              <div><span className="font-semibold">مبلغ:</span> {selectedInvoice.amount} تومان</div>
-              <div><span className="font-semibold">وضعیت:</span> <span className={`px-2 py-1 rounded-full text-xs font-semibold ${selectedInvoice.status === "موفق" ? "bg-emerald-100 text-emerald-600" : "bg-red-100 text-red-600"}`}>{selectedInvoice.status}</span></div>
-              <div><span className="font-semibold">توضیحات:</span> {selectedInvoice.description}</div>
-            </div>
-          </div>
+      <div className="bg-white rounded-xl border border-gray-200 p-8">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <table className="table-auto w-full">
+              <thead className="border-b border-gray-100 text-xs text-light text-gray-500">
+                <th className="pb-3">
+                  #
+                </th>
+                <th className="pb-3">
+                  کالا / خدمات
+                </th>
+                <th className="pb-3">
+                  نام کافه
+                </th>
+                <th className="pb-3">
+                  قیمت
+                </th>
+                <th className="pb-3">
+                  وضعیت
+                </th>
+                <th className="pb-3">
+                  توضیحات
+                </th>
+                <th className="pb-3">
+                  عملیات
+                </th>
+              </thead>
+              <tbody>
+                <tr className="text-center text-sm">
+                  <td className="py-3">
+                    1
+                  </td>
+                  <td className="py-3">
+                    اشتراک نرم افزار - پلن ویژه
+                  </td>
+                  <td className="py-3">
+                    کافه ای
+                  </td>
+                  <td className="py-3">
+                    4,999,000 تومان
+                  </td>
+                  <td className="py-3">
+                    <div className="font-bold text-sm rounded-xl py-1 px-4 bg-emerald-100 text-emerald-500 w-fit mx-auto">پرداخت شده</div>
+                  </td>
+                  <td className="py-3">
+                    -
+                  </td>
+                  <td className="py-3">
+                    <Link href={"#"} className="border border-teal-600 text-teal-600 rounded-xl py-1 px-4 text-xs font-bold">مشاهده</Link>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </table>
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 }

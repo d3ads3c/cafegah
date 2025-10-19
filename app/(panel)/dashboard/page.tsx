@@ -1,136 +1,133 @@
 'use client';
-
+import ProgressBar from "@/app/components/ui/ProgressBar";
+import Link from "next/link";
+import UpdateModal from "@/app/components/UpdateModal";
 export default function Dashboard() {
-
-    // Subscription details mock
-    const activeSubscription = {
-        cafeName: "کافه لبخند",
-        plan: "حرفه‌ای",
-        status: "فعال",
-        createDate: "۱۵ شهریور ۱۴۰۲",
-        expireDate: "۱۵ آبان ۱۴۰۲",
-        daysLeft: 27,
-        totalDays: 60,
-        price: "499,000",
-        features: [
-            "مدیریت منو دیجیتال",
-            "ثبت سفارش آنلاین",
-            "مدیریت موجودی",
-            "گزارش‌های پیشرفته",
-            "پشتیبانی ۲۴/۷",
-        ],
-        paymentHistory: [
-            {
-                date: '۱۵ شهریور ۱۴۰۲',
-                amount: '499,000',
-                status: 'موفق',
-                invoiceId: 'INV-1402-001'
-            },
-            {
-                date: '۱۵ مرداد ۱۴۰۲',
-                amount: '499,000',
-                status: 'موفق',
-                invoiceId: 'INV-1402-002'
-            }
-        ]
-    };
 
     return (
         <>
             <div className="mb-8">
                 <h1 className="text-2xl font-black text-gray-900">داشبورد</h1>
-                <p className="mt-2 text-gray-600">خلاصه وضعیت کافه شما</p>
+                <p className="mt-2 text-gray-600">مدیریت نرم افزار</p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {/* Stats Cards */}
-                <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-teal-50 rounded-xl">
-                            <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-gray-600">فروش امروز</p>
-                            <h3 className="text-2xl font-bold text-gray-900">۲,۵۴۰,۰۰۰ تومان</h3>
-                        </div>
-                    </div>
+            <div className="w-full my-5 rounded-2xl p-4 bg-orange-100 text-orange-400 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <span className="relative flex size-3">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
+                        <span className="relative inline-flex size-3 rounded-full bg-orange-500"></span>
+                    </span>
+                    <h3 className="font-bold text-sm">جهت فعالسازی و خرید اشتراک اطلاعات اکانت خود را کامل کنید.</h3>
                 </div>
-
-                <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-teal-50 rounded-xl">
-                            <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-gray-600">سفارشات امروز</p>
-                            <h3 className="text-2xl font-bold text-gray-900">۴۵ سفارش</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-teal-50 rounded-xl">
-                            <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-gray-600">مشتریان امروز</p>
-                            <h3 className="text-2xl font-bold text-gray-900">۳۲ نفر</h3>
-                        </div>
-                    </div>
+                <div>
+                    <Link href={"#"} className="bg-white rounded-xl py-2 px-5 text-orange-500 text-sm font-bold">تکمیل اطلاعات</Link>
                 </div>
             </div>
-
-            {/* Subscription Details */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
-                <h2 className="text-xl font-bold mb-2">جزئیات اشتراک</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <p><span className="font-semibold">نام کافه:</span> {activeSubscription.cafeName}</p>
-                        <p><span className="font-semibold">پلن:</span> {activeSubscription.plan}</p>
-                        <p><span className="font-semibold">وضعیت:</span> {activeSubscription.status}</p>
-                        <p><span className="font-semibold">تاریخ شروع:</span> {activeSubscription.createDate}</p>
-                        <p><span className="font-semibold">تاریخ پایان:</span> {activeSubscription.expireDate}</p>
-                        <p><span className="font-semibold">روزهای باقی‌مانده:</span> {activeSubscription.daysLeft} از {activeSubscription.totalDays}</p>
-                        <p><span className="font-semibold">قیمت:</span> {activeSubscription.price} تومان</p>
-                    </div>
-                    <div>
-                        <p className="font-semibold mb-2">امکانات:</p>
-                        <ul className="list-disc pr-5 text-gray-700">
-                            {activeSubscription.features.map((feature, idx) => (
-                                <li key={idx}>{feature}</li>
-                            ))}
-                        </ul>
-                    </div>
+            <div className="my-5">
+                <div className="">
+                    <h2 className="text-lg font-bold text-gray-900">اشتراک های من</h2>
                 </div>
-            </div>
-
-            {/* Payment History */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
-                <h2 className="text-xl font-bold mb-2">تاریخچه پرداخت</h2>
-                <div className="space-y-3">
-                    {activeSubscription.paymentHistory.map((payment, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="mt-4 flex w-full overflow-auto gap-5">
+                    <div className="w-[450px] min-w-[450px] rounded-2xl bg-white border border-gray-100 p-4">
+                        <div className="flex items-center gap-3">
                             <div>
-                                <p className="font-semibold">{payment.amount} تومان</p>
-                                <p className="text-sm text-gray-500">{payment.date}</p>
+                                <div className="size-16 rounded-2xl bg-teal-100 flex items-center justify-center">
+                                    <i className="fi fi-sr-store-alt text-2xl text-teal-500 mt-2"></i>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="px-2 py-1 bg-emerald-100 text-emerald-600 rounded-full text-sm">
-                                    {payment.status}
-                                </span>
-                                <span className="text-xs text-gray-400">{payment.invoiceId}</span>
+                            <div className="w-full">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h2 className="font-bold">کافه ای</h2>
+                                        <p className="text-gray-400 text-xs">پلن ویژه</p>
+                                    </div>
+                                    <div className="bg-teal-100 text-teal-500 rounded-xl py-1 px-3">
+                                        <p className="font-bold text-sm">فعال</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    ))}
+                        <div className="my-3">
+                            <ProgressBar progress={70} />
+                        </div>
+                        <div className="flex items-center justify-between gap-3 mt-5">
+                            <div className="">
+                                <p className="text-xs text-gray-400">نسخه نرم افزار</p>
+                                <p className="text-sm font-bold">۱.۳</p>
+                            </div>
+                            <button type="button" className="flex items-center justify-center gap-1 border border-teal-600 text-teal-600 rounded-xl py-1 px-3 hover:bg-teal-600 hover:text-white duration-150 cursor-pointer">
+                                <i className="fi fi-sr-refresh mt-1.5 text-sm"></i>
+                                <p className="text-sm">به‌روزرسانی</p>
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-center gap-4 mt-5">
+                            <Link href={"#"} className="bg-teal-600 text-white rounded-xl py-3 w-1/2 text-center font-bold text-sm">ورود به پنل</Link>
+                            <Link href={"#"} className="border border-teal-600 text-teal-600 rounded-xl py-3 w-1/2 text-center font-bold text-sm">مدیریت اشتراک</Link>
+                        </div>
+                    </div>
+
+                    <Link href={"/dashboard/subscription/new"} className="w-[450px] min-w-[450px] duration-150 rounded-2xl bg-teal-50 cursor-pointer border border-teal-500 border-dashed p-4 flex items-center justify-center hover:border-solid hover:bg-teal-600 hover:[&_*>*]:text-white">
+                        <div className="text-center">
+                            <i className="fi fi-sr-add text-teal-600 text-2xl"></i>
+                            <h3 className="font-bold text-lg -mt-1 mb-1">اشتراک جدید</h3>
+                            <p className="text-xs text-gray-400">جهت دریافت اشتراک نرم افزار جدید برای کافه</p>
+                        </div>
+                    </Link>
                 </div>
             </div>
+            <div className="flex gap-5 my-7">
+                <div className="w-2/3 rounded-2xl border border-gray-100 p-4 bg-white">
+                    <div className="border-b border-gray-100 pb-3">
+                        <h2 className="font-bold text-gray-900">فاکتور های من</h2>
+                    </div>
+                    <div className="space-y-4 max-h-[300px] h-[300px] overflow-auto pt-5">
+                        <div className="w-full flex gap-3 items-center">
+                            <div className="w-1/4">
+                                <p className="text-xs text-gray-400">شماره فاکتور</p>
+                                <p className="text-sm font-bold">IN-234241</p>
+                            </div>
+                            <div className="w-1/4">
+                                <p className="text-xs text-gray-400">تاریخ صدور</p>
+                                <p className="text-sm font-bold">۱۴۰۴/۰۷/۲۵</p>
+                            </div>
+                            <div className="w-1/4">
+                                <p className="text-xs text-gray-400">مبلغ</p>
+                                <p className="text-sm font-bold">۴,۹۹۹,۰۰۰ تومان</p>
+                            </div>
+                            <div className="w-1/4">
+                                <p className="text-xs text-gray-400">وضعیت</p>
+                                <div className="bg-emerald-100 text-emerald-500 rounded-lg py-1 px-3.5 font-bold w-fit text-xs">
+                                    <p>پرداخت شده</p>
+                                </div>
+                            </div>
+                            <div className="w-1/4">
+                                <Link href={"#"} className="border border-teal-600 text-teal-600 rounded-xl py-1 px-4 text-xs font-bold">مشاهده</Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="w-1/3 rounded-2xl border border-gray-100 bg-white">
+                    <div className="border-b border-gray-100 pb-3 p-4">
+                        <h2 className="font-bold text-gray-900">به روزرسانی ها</h2>
+                    </div>
+                    <div className="space-y-4 max-h-[300px] h-[300px] overflow-auto pt-5 p-4">
+                        <div className="w-full gap-3 shadow-xl rounded-2xl p-3">
+                            <h2 className="text-sm font-bold">نسخه ۱.۳۱</h2>
+                            <ul className="space-y-1 text-sm mt-2">
+                                <li className="flex gap-1">
+                                    <i className="fi fi-sr-dot-circle text-teal-600 mt-1"></i>
+                                    <p className="text-gray-500">افزودن تخفیف بر هر مشتری تعریف شده</p>
+                                </li>
+                                <li className="flex gap-1">
+                                    <i className="fi fi-sr-dot-circle text-teal-600 mt-1"></i>
+                                    <p className="text-gray-500">افزودن تخفیف به صورت مبلغ تعریف شده برای مشتریان تعریف شده</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <UpdateModal />
         </>
     );
 }

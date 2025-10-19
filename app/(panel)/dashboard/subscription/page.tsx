@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import Link from 'next/link';
+import ProgressBar from '@/app/components/ui/ProgressBar';
 
 interface SubscriptionStatus {
     daysLeft: number;
@@ -89,19 +91,6 @@ function formatPrice(price: number): string {
     return price.toLocaleString();
 }
 
-function ProgressBar({ status }: { status: SubscriptionStatus }) {
-    const percentage = Math.max(0, Math.min(100, (status.daysLeft / status.totalDays) * 100));
-    const colorClass = percentage < 20 ? 'bg-red-500' : percentage < 50 ? 'bg-yellow-500' : 'bg-teal-600';
-
-    return (
-        <div className="w-full bg-gray-100 rounded-full h-2 mb-1">
-            <div
-                className={`h-full rounded-full transition-all duration-300 ${colorClass}`}
-                style={{ width: `${percentage}%` }}
-            />
-        </div>
-    );
-}
 
 export default function SubscriptionPage() {
     const [selectedPlan, setSelectedPlan] = useState('pro');
@@ -155,76 +144,58 @@ export default function SubscriptionPage() {
     };
 
     return (
-        <main className="max-w-7xl mx-auto p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Current Subscription Info */}
-                <section className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-800">{activeSubscription.cafeName}</h2>
-                            <p className="text-gray-600">اشتراک {activeSubscription.plan}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className={`px-4 py-2 rounded-full ${activeSubscription.status === 'فعال' ? 'bg-emerald-100 text-emerald-600' : 'bg-yellow-100 text-yellow-600'} font-bold`}>
-                                {activeSubscription.status}
+        <main className="w-full mx-auto">
+            <div className="my-5">
+                <div className="">
+                    <h2 className="text-lg font-bold text-gray-900">اشتراک های من</h2>
+                </div>
+                <div className="mt-4 flex w-full overflow-auto gap-5">
+                    <div className="w-[450px] min-w-[450px] rounded-2xl bg-white border border-gray-100 p-4">
+                        <div className="flex items-center gap-3">
+                            <div>
+                                <div className="size-16 rounded-2xl bg-teal-100 flex items-center justify-center">
+                                    <i className="fi fi-sr-store-alt text-2xl text-teal-500 mt-2"></i>
+                                </div>
+                            </div>
+                            <div className="w-full">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h2 className="font-bold">کافه ای</h2>
+                                        <p className="text-gray-400 text-xs">پلن ویژه</p>
+                                    </div>
+                                    <div className="bg-teal-100 text-teal-500 rounded-xl py-1 px-3">
+                                        <p className="font-bold text-sm">فعال</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <p className="text-gray-600 mb-1 text-xs">تاریخ شروع</p>
-                            <p className="font-semibold">{formatDate(activeSubscription.createDate)}</p>
+                        <div className="my-3">
+                            <ProgressBar progress={70} />
                         </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <p className="text-gray-600 mb-1 text-xs">تاریخ پایان</p>
-                            <p className="font-semibold">{formatDate(activeSubscription.expireDate)}</p>
+                        <div className="flex items-center justify-between gap-3 mt-5">
+                            <div className="">
+                                <p className="text-xs text-gray-400">نسخه نرم افزار</p>
+                                <p className="text-sm font-bold">۱.۳</p>
+                            </div>
+                            <button type="button" className="flex items-center justify-center gap-1 border border-teal-600 text-teal-600 rounded-xl py-1 px-3 hover:bg-teal-600 hover:text-white duration-150 cursor-pointer">
+                                <i className="fi fi-sr-refresh mt-1.5 text-sm"></i>
+                                <p className="text-sm">به‌روزرسانی</p>
+                            </button>
                         </div>
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <p className="text-gray-600 mb-1 text-xs">روزهای باقی‌مانده</p>
-                            <p className="font-semibold">{activeSubscription.daysLeft} روز</p>
-                        </div>
-                    </div>
-
-                    <div className="mb-6">
-                        <ProgressBar status={{ daysLeft: activeSubscription.daysLeft, totalDays: activeSubscription.totalDays }} />
-                        <div className="flex justify-between text-sm text-gray-600">
-                            <span>شروع دوره</span>
-                            <span>{activeSubscription.daysLeft} روز باقی‌مانده</span>
-                            <span>پایان دوره</span>
+                        <div className="flex items-center justify-center gap-4 mt-5">
+                            <Link href={"#"} className="bg-teal-600 text-white rounded-xl py-3 w-1/2 text-center font-bold text-sm">ورود به پنل</Link>
+                            <Link href={"#"} className="border border-teal-600 text-teal-600 rounded-xl py-3 w-1/2 text-center font-bold text-sm">مدیریت اشتراک</Link>
                         </div>
                     </div>
 
-                    {/* Current Features */}
-                    <div className="mb-6">
-                        <h3 className="text-lg font-bold mb-4">امکانات فعال</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {activeSubscription.features.map((feature, index) => (
-                                <div key={index} className="flex items-center gap-2">
-                                    <svg className="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span>{feature}</span>
-                                </div>
-                            ))}
+                    <Link href={"/dashboard/subscription/new"} className="w-[450px] min-w-[450px] duration-150 rounded-2xl bg-teal-50 cursor-pointer border border-teal-500 border-dashed p-4 flex items-center justify-center hover:border-solid hover:bg-teal-600 hover:[&_*>*]:text-white">
+                        <div className="text-center">
+                            <i className="fi fi-sr-add text-teal-600 text-2xl"></i>
+                            <h3 className="font-bold text-lg -mt-1 mb-1">اشتراک جدید</h3>
+                            <p className="text-xs text-gray-400">جهت دریافت اشتراک نرم افزار جدید برای کافه</p>
                         </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-4">
-                        <button
-                            onClick={handleRenew}
-                            className="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
-                        >
-                            تمدید اشتراک
-                        </button>
-                        <button
-                            onClick={handleUpgrade}
-                            className="px-6 py-3 border border-teal-600 text-teal-600 rounded-lg hover:bg-teal-50 transition-colors"
-                        >
-                            ارتقا به نسخه بالاتر
-                        </button>
-                    </div>
-                </section>
+                    </Link>
+                </div>
             </div>
 
             {/* Renewal Modal */}
@@ -241,7 +212,7 @@ export default function SubscriptionPage() {
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div className="p-6">
                             {/* Current Plan Info */}
                             <div className="mb-6 p-4 bg-gray-50 rounded-lg">
@@ -289,11 +260,11 @@ export default function SubscriptionPage() {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 {/* Payment Methods */}
                                 <div className="space-y-3">
                                     {paymentMethods.map((method) => (
-                                        <div 
+                                        <div
                                             key={method.id}
                                             className="flex items-center justify-between p-3 border rounded-lg bg-white hover:border-teal-500 cursor-pointer"
                                             onClick={() => setSelectedPaymentMethod(method.id)}
@@ -354,7 +325,7 @@ export default function SubscriptionPage() {
                                 </button>
                             </div>
                         </div>
-                        
+
                         <div className="p-6">
 
 
@@ -363,11 +334,10 @@ export default function SubscriptionPage() {
                                 {plans.map((plan) => (
                                     <div
                                         key={plan.id}
-                                        className={`relative rounded-xl border p-6 ${
-                                            selectedPlan === plan.id
+                                        className={`relative rounded-xl border p-6 ${selectedPlan === plan.id
                                                 ? 'border-teal-500 ring-2 ring-teal-500'
                                                 : 'border-gray-200'
-                                        }`}
+                                            }`}
                                     >
                                         {plan.recommended && (
                                             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -395,11 +365,10 @@ export default function SubscriptionPage() {
                                         </ul>
                                         <button
                                             onClick={() => setSelectedPlan(plan.id)}
-                                            className={`w-full py-2 rounded-lg ${
-                                                selectedPlan === plan.id
+                                            className={`w-full py-2 rounded-lg ${selectedPlan === plan.id
                                                     ? 'bg-teal-600 text-white'
                                                     : 'border border-teal-600 text-teal-600'
-                                            }`}
+                                                }`}
                                         >
                                             {selectedPlan === plan.id ? 'پلن انتخاب شده' : 'انتخاب این پلن'}
                                         </button>
@@ -418,11 +387,11 @@ export default function SubscriptionPage() {
                                         {plans.find(p => p.id === selectedPlan)?.price.toLocaleString()} تومان
                                     </div>
                                 </div>
-                                
+
                                 {/* Payment Methods */}
                                 <div className="space-y-3">
                                     {paymentMethods.map((method) => (
-                                        <div 
+                                        <div
                                             key={method.id}
                                             className="flex items-center justify-between p-3 border rounded-lg bg-white hover:border-teal-500 cursor-pointer"
                                             onClick={() => setSelectedPaymentMethod(method.id)}
