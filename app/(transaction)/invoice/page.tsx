@@ -55,21 +55,23 @@ export default function InvoicePage() {
                     <div>
                         <table className="table-auto w-full">
                             <thead className="border-b border-gray-100 text-xs text-light text-gray-500">
-                                <th className="pb-3">
-                                    #
-                                </th>
-                                <th className="pb-3">
-                                    کالا / خدمات
-                                </th>
-                                <th className="pb-3">
-                                    نام کافه
-                                </th>
-                                <th className="pb-3">
-                                    قیمت
-                                </th>
-                                <th className="pb-3">
-                                    توضیحات
-                                </th>
+                                <tr>
+                                    <th className="pb-3">
+                                        #
+                                    </th>
+                                    <th className="pb-3">
+                                        کالا / خدمات
+                                    </th>
+                                    <th className="pb-3">
+                                        نام کافه
+                                    </th>
+                                    <th className="pb-3">
+                                        قیمت
+                                    </th>
+                                    <th className="pb-3">
+                                        توضیحات
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <tr className="text-center text-sm">

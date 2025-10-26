@@ -1,13 +1,93 @@
+"use client"
 import Image from 'next/image';
 import Link from 'next/link';
-import { Metadata } from 'next';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export const metadata: Metadata = {
-    title: 'ثبت‌نام در کافه گاه',
-    description: 'ایجاد حساب کاربری در کافه گاه',
-};
+type RegForm = {
+    Fname: string,
+    Lname: string,
+    Phone: string,
+    Password1: string,
+    Password2?: string,
+}
+
 
 export default function Register() {
+    const [regForm, setRegForm] = useState<RegForm>({
+        Fname: "",
+        Lname: "",
+        Phone: "",
+        Password1: "",
+        Password2: "",
+    });
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState<string | null>(null);
+    const router = useRouter();
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const { name, value } = e.target;
+        // If phone input, sanitize to ASCII digits and limit to 11 chars
+        if (name === 'Phone') {
+            const digitsOnly = value.replace(/[^0-9]/g, '');
+            const truncated = digitsOnly.slice(0, 11);
+            setRegForm(prev => ({ ...prev, [name]: truncated }));
+            return;
+        }
+        setRegForm(prev => ({ ...prev, [name]: value }));
+    }
+
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        setMessage(null);
+
+        // Basic validation
+        if (!regForm.Phone || !regForm.Password1) {
+            setMessage('لطفاً شماره موبایل و رمز عبور را وارد کنید');
+            return;
+        }
+        // Phone must be 10 or 11 ASCII digits
+        if (!/^[0-9]{11}$/.test(regForm.Phone)) {
+            setMessage('شماره موبایل باید شامل 10 یا 11 رقم انگلیسی باشد');
+            return;
+        }
+        // Password min length
+        if (regForm.Password1.length < 8) {
+            setMessage('رمز عبور باید حداقل 8 کاراکتر باشد');
+            return;
+        }
+        if (regForm.Password1 !== regForm.Password2) {
+            setMessage('رمزهای وارد شده با هم مطابقت ندارند');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const res = await fetch('/api/user/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify({ username: regForm.Phone, password: regForm.Password1, fname: regForm.Fname, lname: regForm.Lname })
+            });
+
+            const data = await res.json();
+            if (data.msg === 'LoggedIn' || data.msg === 'LoggedIn') {
+                setMessage('ثبت‌نام با موفقیت انجام شد. درحال انتقال...');
+                // Redirect to login or dashboard after short delay
+                setTimeout(() => router.push('/login'), 800);
+            } else if (data.msg === 'Failed') {
+                setMessage('اطلاعات نامعتبر است');
+            } else if (data.msg === 'Duplicate') {
+                setMessage('کاربری با این شماره موبایل ثبت شده است');
+            } else {
+                setMessage(data.msg || 'عملیات انجام شد');
+            }
+        } catch {
+            setMessage('خطا در ارتباط با سرور');
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -40,7 +120,10 @@ export default function Register() {
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10">
-                    <form className="space-y-6" action="#" method="POST">
+                    {message && (
+                        <div className="text-sm text-center bg-red-100 w-full mb-10 p-3 rounded-lg text-red-600">{message}</div>
+                    )}
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
@@ -49,10 +132,12 @@ export default function Register() {
                                 <div className="mt-1">
                                     <input
                                         type="text"
-                                        name="first-name"
+                                        name="Fname"
                                         id="first-name"
                                         autoComplete="given-name"
                                         required
+                                        value={regForm.Fname}
+                                        onChange={handleChange}
                                         className="appearance-none block w-full p-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                                     />
                                 </div>
@@ -65,10 +150,12 @@ export default function Register() {
                                 <div className="mt-1">
                                     <input
                                         type="text"
-                                        name="last-name"
+                                        name="Lname"
                                         id="last-name"
                                         autoComplete="family-name"
                                         required
+                                        value={regForm.Lname}
+                                        onChange={handleChange}
                                         className="appearance-none block w-full p-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                                     />
                                 </div>
@@ -81,10 +168,15 @@ export default function Register() {
                             <div className="mt-1">
                                 <input
                                     id="phone"
-                                    name="phone"
+                                    name="Phone"
                                     type="tel"
+                                    inputMode="numeric"
+                                    pattern="[0-9]{10,11}"
+                                    maxLength={11}
                                     autoComplete="tel"
                                     required
+                                    value={regForm.Phone}
+                                    onChange={handleChange}
                                     className="appearance-none block w-full p-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                                     dir="ltr"
                                 />
@@ -98,10 +190,12 @@ export default function Register() {
                             <div className="mt-1">
                                 <input
                                     id="password"
-                                    name="password"
+                                    name="Password1"
                                     type="password"
                                     autoComplete="new-password"
                                     required
+                                    value={regForm.Password1}
+                                    onChange={handleChange}
                                     className="appearance-none block w-full p-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                                 />
                             </div>
@@ -114,10 +208,12 @@ export default function Register() {
                             <div className="mt-1">
                                 <input
                                     id="password-confirm"
-                                    name="password-confirm"
+                                    name="Password2"
                                     type="password"
                                     autoComplete="new-password"
                                     required
+                                    value={regForm.Password2}
+                                    onChange={handleChange}
                                     className="appearance-none block w-full p-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                                 />
                             </div>
@@ -142,9 +238,10 @@ export default function Register() {
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-4 shadow-xl shadow-teal-600/40 border border-transparent rounded-xl duration-150 cursor-pointer text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                                disabled={loading}
+                                className="w-full flex justify-center py-4 shadow-xl shadow-teal-600/40 border border-transparent rounded-xl duration-150 cursor-pointer text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-60"
                             >
-                                ثبت‌نام
+                                {loading ? 'منتظر بمانید ...' : 'ثبت‌نام'}
                             </button>
                         </div>
                     </form>

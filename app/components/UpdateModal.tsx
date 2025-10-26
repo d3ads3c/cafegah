@@ -1,6 +1,6 @@
 export default function UpdateModal() {
     return (
-        <div className="w-full h-screen max-h-screen flex items-center justify-center backdrop-blur-lg bg-black/20 z-30 fixed top-0 right-0">
+        <div className="w-full hidden h-screen max-h-screen flex items-center justify-center backdrop-blur-lg bg-black/20 z-30 fixed top-0 right-0">
             <div className="w-[30%] max-w-[30%] rounded-3xl p-8 bg-white">
                 <div className="flex items-center gap-2">
                     <div className="size-16 rounded-full bg-emerald-100 text-emerald-400 flex items-center justify-center text-[1.5rem]">

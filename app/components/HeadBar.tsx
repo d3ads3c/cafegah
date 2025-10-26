@@ -7,7 +7,7 @@ export default function Headbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     return (
         <>
-            <header className="w-full px-4 sm:px-8 md:px-20 lg:px-40 py-3 sm:py-4 fixed top-3 md:block z-30">
+            <header className="w-full px-4 sm:px-8 md:px-20 lg:px-40 py-3 sm:py-4 fixed top-3 md:block z-10">
                 <nav className="flex items-center justify-between backdrop-blur-xl p-3 sm:p-4 rounded-3xl relative shadow-xl md:shadow-none bg-white/50">
                     {/* Logo */}
                     <div className="flex items-center flex-shrink-0">
@@ -23,8 +23,11 @@ export default function Headbar() {
                     </ul>
                     {/* Desktop Actions */}
                     <div className="hidden md:flex items-center justify-end gap-2 lg:gap-4 flex-shrink-0">
-                        <Link href="/login" className="rounded-2xl py-2 px-4 border border-teal-600 text-teal-600 font-bold hover:bg-teal-600 hover:text-white duration-200 hover:shadow-xl hover:shadow-teal-600/30 text-sm lg:text-base">پنل تامین کنندگان</Link>
-                        <Link href="/login" className="rounded-2xl py-2 px-4 bg-teal-600 text-white font-bold shadow-xl shadow-teal-600/30 text-sm lg:text-base">شروع کنید !</Link>
+                        <div className="relative">
+                            <Link href="/login" className="rounded-2xl py-3 px-4 border border-teal-600 text-teal-600 font-bold hover:bg-teal-600 hover:text-white duration-200 hover:shadow-xl hover:shadow-teal-600/30 text-sm lg:text-base">پنل تامین کنندگان</Link>
+                            <div className="absolute -top-6  right-0 bg-teal-600 text-white text-xs py-1 px-3 rounded-full">به زودی</div>
+                        </div>
+                        <Link href="/login" className="rounded-2xl py-3 px-4 bg-teal-600 text-white font-bold shadow-xl shadow-teal-600/30 text-sm lg:text-base">شروع کنید !</Link>
                     </div>
                     {/* Mobile Menu Button */}
                     <button
