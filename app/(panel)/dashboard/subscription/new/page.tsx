@@ -1,8 +1,9 @@
 "use client"
 import MultiStepForm from '@/app/components/MultiStepForm';
-import React from 'react'
+import { useRouter } from 'next/navigation';
 
 export default function NewSub() {
+    const router = useRouter()
     return (
         <div className="">
             <div className="mb-8">
@@ -10,7 +11,7 @@ export default function NewSub() {
                 <p className="mt-2 text-gray-600">دریافت لایسنس نرم افزار</p>
             </div>
             <div className='w-full'>
-                <MultiStepForm onFinish={(data) => { console.log('finished', data) }} />
+                <MultiStepForm onFinish={() => { router.push('/dashboard') }} />
             </div>
         </div>
     )

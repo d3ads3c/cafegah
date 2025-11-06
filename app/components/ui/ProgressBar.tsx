@@ -1,12 +1,12 @@
 import React from "react";
 
-const ProgressBar = ({ progress = 50 }) => {
+const ProgressBar = ({ progress = 50, days = 0 }) => {
     return (
         <div className="w-full max-w-md mx-auto">
             {/* Label */}
             <div className="flex justify-between mb-3">
                 <span className="text-sm font-medium text-gray-700">اعتبار</span>
-                <span className="text-sm font-medium text-gray-700">۲۷۰ روز دیگر</span>
+                <span className="text-sm font-medium text-gray-700">{days} روز دیگر</span>
             </div>
 
             {/* Progress container */}

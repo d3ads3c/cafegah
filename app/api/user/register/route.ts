@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
     try {
@@ -6,30 +7,45 @@ export async function POST(req: NextRequest) {
 
         // Support multiple possible incoming field names
         const username = body.username;
-        const password = body.password;
+
         const Fname = body.fname;
         const Lname = body.lname;
-
-        if (!username || !password) {
+        const md5Password = crypto.createHash("md5").update(String(body.password)).digest("hex");
+        if (!username || !md5Password) {
             return NextResponse.json({ msg: 'missing_fields' }, { status: 400 });
         }
 
+        // Determine client IP. Prefer X-Forwarded-For (can contain a list), then X-Real-IP,
+        // then fall back to any ip property that might exist on the request object.
+        const xff = req.headers.get('x-forwarded-for');
+        // Prefer the first value in X-Forwarded-For, otherwise fall back to X-Real-IP.
+        // Avoid using `any` cast on `req` — NextRequest doesn't expose an `ip` property.
+        const clientIp = xff ? xff.split(',')[0].trim() : (req.headers.get('x-real-ip') || '');
+
         const formData = new FormData();
         formData.append('Phone', username);
-        formData.append('password', password);
+        formData.append("password", md5Password);
         formData.append('Fname', Fname);
         formData.append('Lname', Lname);
+        // Include client IP for upstream service if available
+        if (clientIp) formData.append('IPAddress', clientIp);
+
+        const upstreamHeaders: Record<string, string> = {
+            // let fetch set the Content-Type for FormData; but include Accept
+            Accept: 'application/json',
+        };
+        // if (clientIp) upstreamHeaders['X-Forwarded-For'] = clientIp;
 
         const upstream = await fetch('http://localhost:8000/user/register', {
             method: 'POST',
             body: formData,
-            headers: {
-                // let fetch set the Content-Type for FormData; but include Accept
-                Accept: 'application/json',
-            },
+            headers: upstreamHeaders,
         });
 
         const data = await upstream.json().catch(() => ({}));
+        if (data.Error) {
+            console.log(data.Error)
+        }
         if (data.token) {
             // create cookie header
             const cookie = `LoggedUser=${data.token}; Path=/; Max-Age=${2 * 60 * 60}; HttpOnly; SameSite=Strict`;

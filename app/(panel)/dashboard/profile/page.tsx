@@ -1,11 +1,42 @@
-import { Metadata } from 'next';
+"use client"
 
-export const metadata: Metadata = {
-    title: 'پروفایل | کافه گاه',
-    description: 'مدیریت پروفایل کافه گاه',
-};
+import { useState, useEffect } from "react";
+import { UserInfo } from "@/types/AllTypes";
 
 export default function Profile() {
+
+    const [info, setInfo] = useState<UserInfo>({
+        Fname: "",
+        Lname: "",
+        Email: "",
+        Phone: "",
+        Status: ""
+    })
+
+    useEffect(() => {
+        const checkInfo = async () => {
+            try {
+                const res = await fetch("/api/user/info", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({}),
+                });
+
+                const data = await res.json();
+                console.log(data)
+                setInfo(data)
+            } catch (err) {
+                console.error("[AuthChecker] fetch error:", err);
+            }
+        };
+
+        checkInfo();
+    }, []);
+
+
     return (
         <div>
             <div className="mb-8">
@@ -26,7 +57,7 @@ export default function Profile() {
                                     type="text"
                                     name="first-name"
                                     id="first-name"
-                                    defaultValue="علی"
+                                    defaultValue={info.Fname}
                                     className="bg-gray- border mt-1 block w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-3.5"
                                 />
                             </div>
@@ -39,7 +70,7 @@ export default function Profile() {
                                     type="text"
                                     name="last-name"
                                     id="last-name"
-                                    defaultValue="محمدی"
+                                    defaultValue={info.Lname}
                                     className="bg-gray- border mt-1 block w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-3.5"
                                 />
                             </div>
@@ -53,7 +84,7 @@ export default function Profile() {
                                 type="email"
                                 name="email"
                                 id="email"
-                                defaultValue="ali@example.com"
+                                defaultValue={info.Email}
                                 className="bg-gray- border mt-1 block w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-3.5"
                             />
                         </div>
@@ -66,7 +97,7 @@ export default function Profile() {
                                 type="tel"
                                 name="phone"
                                 id="phone"
-                                defaultValue="09123456789"
+                                defaultValue={info.Phone}
                                 dir="ltr"
                                 className="bg-gray- border mt-1 block w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-3.5"
                             />

@@ -9,7 +9,7 @@ type RegForm = {
     Lname: string,
     Phone: string,
     Password1: string,
-    Password2?: string,
+    Password2: string,
 }
 
 
@@ -23,6 +23,7 @@ export default function Register() {
     });
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
+    const [login, setLogin] = useState<boolean>(false)
     const router = useRouter();
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -71,10 +72,11 @@ export default function Register() {
             });
 
             const data = await res.json();
-            if (data.msg === 'LoggedIn' || data.msg === 'LoggedIn') {
+            if (data.msg === 'LoggedIn') {
+                setLogin(true)
                 setMessage('ثبت‌نام با موفقیت انجام شد. درحال انتقال...');
                 // Redirect to login or dashboard after short delay
-                setTimeout(() => router.push('/login'), 800);
+                setTimeout(() => router.push('/dashboard'), 800);
             } else if (data.msg === 'Failed') {
                 setMessage('اطلاعات نامعتبر است');
             } else if (data.msg === 'Duplicate') {
@@ -121,7 +123,11 @@ export default function Register() {
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10">
                     {message && (
-                        <div className="text-sm text-center bg-red-100 w-full mb-10 p-3 rounded-lg text-red-600">{message}</div>
+                        <div
+                            className={`text-sm text-center w-full mb-10 p-3 rounded-lg ${login ? "text-emerald-700 bg-emerald-50 border border-emerald-200" : "text-red-700 bg-red-50 border border-red-200"}`}
+                        >
+                            {message}
+                        </div>
                     )}
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-2 gap-4">

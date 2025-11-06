@@ -1,13 +1,71 @@
+"use client"
 import Image from 'next/image';
 import Link from 'next/link';
-import { Metadata } from 'next';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export const metadata: Metadata = {
-    title: 'ورود به کافه گاه',
-    description: 'ورود به پنل مدیریت کافه گاه',
-};
+
+type LoginForm = {
+    Phone: string,
+    Password: string,
+}
 
 export default function Login() {
+    const [loginForm, setLoginForm] = useState<LoginForm>({
+        Phone: "",
+        Password: ""
+    })
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState<string | null>(null);
+    const router = useRouter();
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const { name, value } = e.target;
+        // If phone input, sanitize to ASCII digits and limit to 11 chars
+        if (name === 'Phone') {
+            const digitsOnly = value.replace(/[^0-9]/g, '');
+            const truncated = digitsOnly.slice(0, 11);
+            setLoginForm(prev => ({ ...prev, [name]: truncated }));
+            return;
+        }
+        setLoginForm(prev => ({ ...prev, [name]: value }));
+    }
+
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+
+        // Basic validation
+        if (!loginForm.Phone) {
+            return;
+        }
+        // Phone must be 10 or 11 ASCII digits
+        if (!/^[0-9]{11}$/.test(loginForm.Phone)) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const res = await fetch('/api/user/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify({ username: loginForm.Phone, password: loginForm.Password })
+            });
+
+            const data = await res.json();
+            if (data.msg === 'LoggedIn') {
+                setTimeout(() => router.push('/dashboard'), 400);
+            } else if (data.msg === 'Failed') {
+                setMessage('خطا در عملیات، مجدد تلاش کنید');
+            } else if (data.msg === 'invalid') {
+                setMessage('نام کاربری / رمز عبور اشتباه است');
+            }
+        } catch {
+            setMessage('خطا در ارتباط با سرور');
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -40,17 +98,25 @@ export default function Login() {
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10">
-                    <form className="space-y-6" action="#" method="POST">
+                    {message && (
+                        <div
+                            className={`text-sm text-center w-full mb-10 p-3 rounded-lg text-red-700 bg-red-50 border border-red-200`}
+                        >
+                            {message}
+                        </div>
+                    )}
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                ایمیل
+                                شماره موبایل
                             </label>
                             <div className="mt-1">
                                 <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
+                                    id="Phone"
+                                    name="Phone"
+                                    type="text"
+                                    value={loginForm.Phone}
+                                    onChange={handleChange}
                                     required
                                     className="appearance-none block w-full p-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                                 />
@@ -63,9 +129,11 @@ export default function Login() {
                             </label>
                             <div className="mt-1">
                                 <input
-                                    id="password"
-                                    name="password"
+                                    id="Password"
+                                    name="Password"
                                     type="password"
+                                    value={loginForm.Password}
+                                    onChange={handleChange}
                                     autoComplete="current-password"
                                     required
                                     className="appearance-none block w-full p-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
@@ -99,9 +167,10 @@ export default function Login() {
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                                disabled={loading}
+                                className="w-full flex justify-center py-4 shadow-xl shadow-teal-600/40 border border-transparent rounded-xl duration-150 cursor-pointer text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-60"
                             >
-                                ورود
+                                {loading ? 'منتظر بمانید ...' : 'ورود'}
                             </button>
                         </div>
                     </form>

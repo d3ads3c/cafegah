@@ -1,0 +1,55 @@
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(req: NextRequest) {
+    try {
+        // Build FormData and include the LoggedUser cookie if present.
+        const formData = new FormData();
+
+        // Read `LoggedUser` cookie from the incoming request (NextRequest exposes `cookies`).
+        // `req.cookies.get(name)` returns an object with a `value` property or `undefined`.
+        const loggedUserCookie = req.cookies.get("LoggedUser");
+        const loggedUser = loggedUserCookie ? loggedUserCookie.value : null;
+        if (loggedUser) {
+            // send the cookie value as the `token` field expected by the upstream API
+            formData.append("token", loggedUser);
+        } else {
+            // maintain previous behavior if cookie missing
+            formData.append("token", "null");
+        }
+
+        const xff = req.headers.get('x-forwarded-for');
+        const clientIp = xff ? xff.split(',')[0].trim() : (req.headers.get('x-real-ip') || '');
+        if (clientIp) formData.append('ipaddress', clientIp);
+
+        // Forward client IP to upstream API via headers as well.
+        // const forwardHeaders: Record<string, string> = {};
+        // if (clientIp) {
+        //     // Set both a conventional and a custom header so upstream can read it
+        //     forwardHeaders['x-forwarded-for'] = clientIp;
+        //     forwardHeaders['x-client-ip'] = clientIp;
+        // }
+
+        const response = await fetch("http://localhost:8000/user/info", {
+            method: "POST",
+            body: formData,
+        });
+        const data = await response.json();
+        if (data.Status == "active") {
+            const response = NextResponse.json(data, { status: 200 });
+            return response;
+        } else if (data == "Logout") {
+            // Upstream indicated logout — clear the LoggedUser cookie by sending
+            // a Set-Cookie header with Max-Age=0 so the browser removes it.
+            const cookieHeader = `LoggedUser=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict`;
+            const resp = NextResponse.json({ msg: "LoggedOut" }, { status: 200 });
+            resp.headers.set("Set-Cookie", cookieHeader);
+            return resp;
+        }
+
+        // Ensure we always return a response. If upstream returned something
+        // unexpected (no token and not "No User Found"), treat as invalid.
+        return NextResponse.json({ msg: "invalid" }, { status: 200 });
+    } catch {
+        return NextResponse.json({ msg: "An error occurred" }, { status: 400 });
+    }
+}

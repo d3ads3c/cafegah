@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "@flaticon/flaticon-uicons/css/all/all.css";
+import AuthChecker from "../components/AuthChecker";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body
         className={`${bakh.className} antialiased`}
       >
+        <AuthChecker />
         {children}
       </body>
     </html>
