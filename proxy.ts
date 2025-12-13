@@ -1,18 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * Segment middleware for the (panel) route group.
- * Requires a LoggedUser cookie (set by your register/login API).
- * If missing, redirects to /login and includes a `from` query param so the user
- * can be returned after authenticating.
+ * Middleware for protected routes.
+ * - Protected routes (dashboard, invoice, result): Requires LoggedUser cookie. If missing, redirects to /login.
+ * - Public auth routes (login, register): If LoggedUser cookie is set, redirects to /dashboard.
  */
 export function proxy(req: NextRequest) {
   try {
     const token = req.cookies.get('LoggedUser')?.value;
-    if (!token) {
+    const pathname = req.nextUrl.pathname;
+
+    // If user is logged in and trying to access login/register, redirect to dashboard
+    if (token && (pathname === '/login' || pathname === '/register')) {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+
+    // If user is not logged in and trying to access protected routes, redirect to login
+    if (!token && (pathname.startsWith('/dashboard') || pathname.startsWith('/invoice') || pathname.startsWith('/result'))) {
       const loginUrl = new URL('/login', req.url);
       // preserve destination so login can redirect back
-      loginUrl.searchParams.set('from', req.nextUrl.pathname + req.nextUrl.search);
+      loginUrl.searchParams.set('from', pathname + req.nextUrl.search);
       return NextResponse.redirect(loginUrl);
     }
 
@@ -25,9 +32,11 @@ export function proxy(req: NextRequest) {
   }
 }
 
-// Configure middleware to protect dashboard, invoice, and result routes
+// Configure middleware to protect dashboard, invoice, and result routes, and redirect logged-in users from auth routes
 export const config = {
   matcher: [
+    '/login',
+    '/register',
     '/dashboard/:path*',
     '/invoice/:path*',
     '/result/:path*'

@@ -96,7 +96,7 @@ export default function Home() {
           </div>
           <div>
             <Image
-              src="/img/herosection.png"
+              src="/img/hero-image.png"
               alt="hero section image"
               width={1200}
               height={600}
@@ -106,7 +106,7 @@ export default function Home() {
             />
           </div>
         </main>
-        <div className="my-2 px-2 sm:px-6 md:px-16 lg:px-40 mt-12 md:mt-0" id="features">
+        <div className="my-2 px-2 sm:px-6 md:px-16 lg:px-40 mt-12" id="features">
           <h3 className="border rounded-full py-1.5 px-4 w-fit mx-auto border-gray-400 text-gray-500 shadow-xl bg-white text-center">قابلیت ها</h3>
           <h2 className="text-3xl font-bold text-center my-5">قابلیت هایی که <span className="text-teal-600 !font-black">کافه گاه</span> را متمایز میکند</h2>
           <p className="text-center">تمام تمرکز تیم کافه گاه راحتی کاربری برای مشتریان خود و ارائه قابلیت و امکانات پیشرفته که کافه گاه را متمایز نسبت به رقبای خود می کند.</p>
@@ -146,7 +146,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex flex-col md:flex-row items-center gap-5 mt-5">
-            <div className="w-full md:w-1/2 h-max sm:h-[300px] bg-white rounded-3xl border border-gray-200 p-4 mb-5 md:mb-0">
+            <div className="w-full md:w-1/2 h-max sm:h-[330px] bg-white rounded-3xl border border-gray-200 p-4 mb-5 md:mb-0">
               <div className="min-h-[70%]">
                 <Image src={"/img/features/mobile-application.png"} width={5000} height={2000} quality={100} alt="Mobile Application" className="rounded-2xl mx-auto"></Image>
               </div>
@@ -157,7 +157,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="w-full md:w-1/2 h-max sm:h-[300px] bg-white rounded-3xl border border-gray-200 p-4">
+            <div className="w-full md:w-1/2 h-max sm:h-[330px] bg-white rounded-3xl border border-gray-200 p-4">
               <div className="min-h-[70%]">
                 <Image src={"/img/features/online-support.png"} width={5000} height={2000} quality={100} alt="Online Support" className="rounded-2xl mx-auto"></Image>
               </div>

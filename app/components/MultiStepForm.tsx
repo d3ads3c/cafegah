@@ -176,7 +176,7 @@ export default function MultiStepForm({ onFinish }: { onFinish?: (data: FormData
   };
 
   return (
-    <div className="max-w-[70%] w-[70%] mx-auto bg-white rounded-2xl p-6 sm:p-8 border border-gray-100">
+    <div className="xl:max-w-[70%] xl:w-[70%] w-full mx-auto bg-white rounded-2xl p-6 sm:p-8 border border-gray-100">
       <div className="flex items-center gap-4 mb-6">
         <div className="flex-1">
           <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">

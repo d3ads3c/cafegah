@@ -19,6 +19,7 @@ export default function Headbar() {
                         <li><Link href="/#features">قابلیت ها</Link></li>
                         <li><Link href="/#prices">قیمت ها</Link></li>
                         <li><Link href="/#faq">سوالات متداول</Link></li>
+                        <li><Link href="/blog">بلاگ</Link></li>
                         <li><Link href="/about-us">درباره ما</Link></li>
                     </ul>
                     {/* Desktop Actions */}

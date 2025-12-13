@@ -8,6 +8,7 @@ type RegForm = {
     Fname: string,
     Lname: string,
     Phone: string,
+    Email: string,
     Password1: string,
     Password2: string,
 }
@@ -18,6 +19,7 @@ export default function Register() {
         Fname: "",
         Lname: "",
         Phone: "",
+        Email: "",
         Password1: "",
         Password2: "",
     });
@@ -38,18 +40,29 @@ export default function Register() {
         setRegForm(prev => ({ ...prev, [name]: value }));
     }
 
+    // Email validation function
+    function isValidEmail(email: string): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setMessage(null);
 
         // Basic validation
-        if (!regForm.Phone || !regForm.Password1) {
-            setMessage('لطفاً شماره موبایل و رمز عبور را وارد کنید');
+        if (!regForm.Phone || !regForm.Email || !regForm.Password1) {
+            setMessage('لطفاً تمام فیلدهای ضروری را پر کنید');
             return;
         }
         // Phone must be 10 or 11 ASCII digits
         if (!/^[0-9]{11}$/.test(regForm.Phone)) {
-            setMessage('شماره موبایل باید شامل 10 یا 11 رقم انگلیسی باشد');
+            setMessage('شماره موبایل باید شامل 11 رقم انگلیسی باشد');
+            return;
+        }
+        // Email validation
+        if (!isValidEmail(regForm.Email)) {
+            setMessage('لطفاً یک آدرس ایمیل معتبر وارد کنید');
             return;
         }
         // Password min length
@@ -68,7 +81,7 @@ export default function Register() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'same-origin',
-                body: JSON.stringify({ username: regForm.Phone, password: regForm.Password1, fname: regForm.Fname, lname: regForm.Lname })
+                body: JSON.stringify({ username: regForm.Phone, password: regForm.Password1, fname: regForm.Fname, lname: regForm.Lname, Email: regForm.Email })
             });
 
             const data = await res.json();
@@ -185,6 +198,26 @@ export default function Register() {
                                     onChange={handleChange}
                                     className="appearance-none block w-full p-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                                     dir="ltr"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                آدرس ایمیل
+                            </label>
+                            <div className="mt-1">
+                                <input
+                                    id="email"
+                                    name="Email"
+                                    type="email"
+                                    autoComplete="email"
+                                    required
+                                    value={regForm.Email}
+                                    onChange={handleChange}
+                                    className="appearance-none block w-full p-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+                                    dir="ltr"
+                                    placeholder="example@domain.com"
                                 />
                             </div>
                         </div>

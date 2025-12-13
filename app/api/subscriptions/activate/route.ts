@@ -4,6 +4,7 @@ export async function POST(req: NextRequest) {
     try {
         // Build FormData and include the LoggedUser cookie if present.
         const formData = new FormData();
+        const body = await req.json();
 
         // Read `LoggedUser` cookie from the incoming request (NextRequest exposes `cookies`).
         // `req.cookies.get(name)` returns an object with a `value` property or `undefined`.
@@ -21,16 +22,26 @@ export async function POST(req: NextRequest) {
         const clientIp = xff ? xff.split(',')[0].trim() : (req.headers.get('x-real-ip') || '');
         if (clientIp) formData.append('ipaddress', clientIp);
 
+        // Forward client IP to upstream API via headers as well.
+        // const forwardHeaders: Record<string, string> = {};
+        // if (clientIp) {
+        //     // Set both a conventional and a custom header so upstream can read it
+        //     forwardHeaders['x-forwarded-for'] = clientIp;
+        //     forwardHeaders['x-client-ip'] = clientIp;
+        // }
 
-        const response = await fetch("http://localhost:8000/subscription/my", {
+        formData.append("Sub", body.Serial)
+        const response = await fetch("http://localhost:8000/init/db", {
             method: "POST",
             body: formData,
         });
         const data = await response.json();
+        console.log(data)
+        console.log(formData)
         if (data.Status == "Success") {
-            const response = NextResponse.json(data.Subs, { status: 200 });
+            const response = NextResponse.json({ "Status": "Success" }, { status: 200 });
             return response;
-        } else if (data.Status == "Logout") {
+        } else if (data == "Logout") {
             // Upstream indicated logout — clear the LoggedUser cookie by sending
             // a Set-Cookie header with Max-Age=0 so the browser removes it.
             const cookieHeader = `LoggedUser=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict`;
@@ -38,7 +49,6 @@ export async function POST(req: NextRequest) {
             resp.headers.set("Set-Cookie", cookieHeader);
             return resp;
         }
-        console.log(data)
 
         // Ensure we always return a response. If upstream returned something
         // unexpected (no token and not "No User Found"), treat as invalid.

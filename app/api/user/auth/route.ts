@@ -5,23 +5,14 @@ export async function POST(req: NextRequest) {
         // Build FormData and include the LoggedUser cookie if present.
         const formData = new FormData();
 
-        // Read `LoggedUser` cookie from the incoming request (NextRequest exposes `cookies`).
-        // `req.cookies.get(name)` returns an object with a `value` property or `undefined`.
         const loggedUserCookie = req.cookies.get("LoggedUser");
         const loggedUser = loggedUserCookie ? loggedUserCookie.value : null;
         if (loggedUser) {
-            // send the cookie value as the `token` field expected by the upstream API
             formData.append("token", loggedUser);
         } else {
-            // maintain previous behavior if cookie missing
             formData.append("token", "null");
         }
-
-        // Determine client IP. Prefer X-Forwarded-For (can contain a list), then X-Real-IP,
-        // then fall back to any ip property that might exist on the request object.
         const xff = req.headers.get('x-forwarded-for');
-        // Prefer the first value in X-Forwarded-For, otherwise fall back to X-Real-IP.
-        // Avoid using `any` cast on `req` — NextRequest doesn't expose an `ip` property.
         const clientIp = xff ? xff.split(',')[0].trim() : (req.headers.get('x-real-ip') || '');
         if (clientIp) formData.append('ipaddress', clientIp);
 

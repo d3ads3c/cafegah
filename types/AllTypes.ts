@@ -23,6 +23,8 @@ export type MySubscriptions = {
     State: string
     PostalCode: string
     Address: string
+    Invoice: string
+    Type: string
 }
 
 export type MyInvoicesType = {

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 export default function NewSub() {
     const router = useRouter()
     return (
-        <div className="">
+        <div className="w-full">
             <div className="mb-8">
                 <h1 className="text-2xl font-black text-gray-900">ایجاد اشتراک جدید</h1>
                 <p className="mt-2 text-gray-600">دریافت لایسنس نرم افزار</p>

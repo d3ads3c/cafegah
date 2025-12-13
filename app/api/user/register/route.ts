@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
 
         const Fname = body.fname;
         const Lname = body.lname;
+        const Email = body.Email
         const md5Password = crypto.createHash("md5").update(String(body.password)).digest("hex");
         if (!username || !md5Password) {
             return NextResponse.json({ msg: 'missing_fields' }, { status: 400 });
@@ -27,6 +28,7 @@ export async function POST(req: NextRequest) {
         formData.append("password", md5Password);
         formData.append('Fname', Fname);
         formData.append('Lname', Lname);
+        formData.append('Email', Email)
         // Include client IP for upstream service if available
         if (clientIp) formData.append('IPAddress', clientIp);
 

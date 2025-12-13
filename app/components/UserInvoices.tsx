@@ -16,7 +16,6 @@ export default function MyInvoices() {
             });
 
             const data = await res.json();
-            console.log(data)
             setInvoices(data)
         } catch (err) {
             console.error("[AuthChecker] fetch error:", err);
