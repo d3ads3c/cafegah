@@ -1,6 +1,6 @@
 "use client"
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 const navigation = [
@@ -32,6 +32,20 @@ const navigation = [
         ),
     },
     {
+        name: 'تیکت‌های پشتیبانی',
+        href: '/dashboard/support',
+        icon: (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M18 10c0-3.314-2.686-6-6-6S6 6.686 6 10m12 0a6 6 0 01-6 6m6-6h2m-2 0h-2m-4 6H9m3 0v2m0-2a6 6 0 01-6-6m0 0H4m2 0h2"
+                />
+            </svg>
+        ),
+    },
+    {
         name: 'پروفایل',
         href: '/dashboard/profile',
         icon: (
@@ -44,6 +58,20 @@ const navigation = [
 
 export default function DashboardSidebar() {
     const pathname = usePathname();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        try {
+            await fetch("/api/user/logout", {
+                method: "POST",
+                credentials: "include",
+            });
+        } catch {
+            // ignore
+        } finally {
+            router.push("/login");
+        }
+    };
 
     return (
         <div className={`w-64 bg-white border-l border-gray-200 ${pathname === '/dashboard/subscription/new' && "hidden"}`}>
@@ -87,7 +115,10 @@ export default function DashboardSidebar() {
 
                 {/* User Menu */}
                 <div className="p-4 border-t border-gray-200">
-                    <button className="flex items-center gap-3 px-3 py-2 w-full rounded-xl hover:bg-gray-50 text-sm font-medium text-red-600">
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-3 py-2 w-full rounded-xl hover:bg-gray-50 text-sm font-medium text-red-600"
+                    >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>

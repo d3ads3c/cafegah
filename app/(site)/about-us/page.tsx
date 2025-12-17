@@ -29,9 +29,9 @@ const teamMembers = [
 ];
 
 const stats = [
-    { name: 'کافه‌های فعال', value: '137' },
-    { name: 'سفارش‌های روزانه', value: '5,000+' },
-    { name: 'رضایت مشتریان', value: '98٪' },
+    { name: 'کافه‌های فعال', value: '65' },
+    { name: 'سفارش‌های روزانه', value: '3,000+' },
+    { name: 'رضایت مشتریان', value: '99٪' },
     { name: 'درخواست های انجام شده', value: '19' },
 ];
 
@@ -42,7 +42,7 @@ export default function About() {
             <section className="relative py-24 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-teal-600/90 to-teal-800/90 z-0" />
                 <div className="absolute inset-0 bg-[url('/img/about-hero.jpg')] bg-cover bg-center mix-blend-overlay" />
-                <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
+                <div className="relative  mx-auto max-w-7xl px-6 text-center">
                     <h1 className="text-4xl font-black text-white mb-6">
                         داستان کافه گاه
                     </h1>

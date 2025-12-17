@@ -1,10 +1,9 @@
 'use client';
-import Link from "next/link";
 import ModalView from "@/app/components/ui/Modal";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Toast from "@/app/components/ui/Toast";
-import { UserInfo } from "@/types/AllTypes";
+import { UserInfo, Update } from "@/types/AllTypes";
 import MySubs from "@/app/components/MySubs";
 import MyInvoices from "@/app/components/UserInvoices";
 
@@ -45,6 +44,7 @@ export default function Dashboard() {
         Status: "",
         Meli: ""
     })
+    const [updates, setUpdates] = useState<Update[]>([])
 
     const checkInfo = async () => {
         try {
@@ -63,8 +63,30 @@ export default function Dashboard() {
             console.error("[AuthChecker] fetch error:", err);
         }
     };
+
+    const fetchUpdates = async () => {
+        try {
+            const res = await fetch("/api/updates", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+            });
+
+            const data = await res.json();
+            if (data.Updates && Array.isArray(data.Updates)) {
+                setUpdates(data.Updates);
+            }
+        } catch (err) {
+            console.error("[Dashboard] fetch updates error:", err);
+        }
+    };
+
     useEffect(() => {
         checkInfo();
+        fetchUpdates();
     }, []);
 
     const handleNationalIdChange = (value: string) => {
@@ -132,18 +154,18 @@ export default function Dashboard() {
                 <p className="mt-2 text-gray-600">مدیریت نرم افزار</p>
             </div>
             {info.Meli === "0" ? (
-                <div className="w-full my-5 rounded-2xl p-4 bg-orange-100 text-orange-400 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <span className="relative flex size-3">
+                <div className="w-full my-5 rounded-2xl p-4 bg-orange-100 text-orange-400 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 flex-1">
+                        <span className="relative flex size-3 flex-shrink-0">
                             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
                             <span className="relative inline-flex size-3 rounded-full bg-orange-500"></span>
                         </span>
                         <h3 className="font-bold text-sm">جهت فعالسازی و خرید اشتراک اطلاعات اکانت خود را کامل کنید.</h3>
                     </div>
-                    <div>
+                    <div className="w-full sm:w-auto">
                         <button
                             onClick={() => setIsModalOpen(true)}
-                            className="bg-white rounded-xl py-2 px-5 text-orange-500 text-sm font-bold"
+                            className="bg-white rounded-xl py-2 px-5 text-orange-500 text-sm font-bold w-full sm:w-auto"
                         >
                             تکمیل اطلاعات
                         </button>
@@ -161,28 +183,40 @@ export default function Dashboard() {
                 </div>
             )}
             <MySubs />
-            <div className="flex gap-5 my-7">
-                <div className="w-2/3">
+            <div className="flex flex-col lg:flex-row gap-5 my-7">
+                <div className="w-full lg:w-2/3">
                     <MyInvoices />
                 </div>
-                <div className="w-1/3 rounded-2xl border border-gray-100 bg-white">
+                <div className="w-full lg:w-1/3 rounded-2xl border border-gray-100 bg-white">
                     <div className="border-b border-gray-100 pb-3 p-4">
                         <h2 className="font-bold text-gray-900">به روزرسانی ها</h2>
                     </div>
                     <div className="space-y-4 max-h-[300px] h-[300px] overflow-auto pt-5 p-4">
-                        <div className="w-full gap-3 shadow-xl rounded-2xl p-3">
-                            <h2 className="text-sm font-bold">نسخه ۱.۳۱</h2>
-                            <ul className="space-y-1 text-sm mt-2">
-                                <li className="flex gap-1">
-                                    <i className="fi fi-sr-dot-circle text-teal-600 mt-1"></i>
-                                    <p className="text-gray-500">افزودن تخفیف بر هر مشتری تعریف شده</p>
-                                </li>
-                                <li className="flex gap-1">
-                                    <i className="fi fi-sr-dot-circle text-teal-600 mt-1"></i>
-                                    <p className="text-gray-500">افزودن تخفیف به صورت مبلغ تعریف شده برای مشتریان تعریف شده</p>
-                                </li>
-                            </ul>
-                        </div>
+                        {updates.length > 0 ? (
+                            updates.map((update) => (
+                                <div key={update.ID} className="w-full gap-3 shadow-xl rounded-2xl p-3">
+                                    <h2 className="text-sm font-bold">{update.Title}</h2>
+                                    {update.Items && update.Items.length > 0 ? (
+                                        <ul className="space-y-1 text-sm mt-2">
+                                            {update.Items
+                                                .sort((a, b) => a.DisplayOrder - b.DisplayOrder)
+                                                .map((item) => (
+                                                    <li key={item.ID} className="flex gap-1">
+                                                        <i className="fi fi-sr-dot-circle text-teal-600 mt-1"></i>
+                                                        <p className="text-gray-500">{item.Text}</p>
+                                                    </li>
+                                                ))}
+                                        </ul>
+                                    ) : (
+                                        <p className="text-sm text-gray-500 mt-2">{update.Description || 'بدون توضیحات'}</p>
+                                    )}
+                                </div>
+                            ))
+                        ) : (
+                            <div className="w-full gap-3 shadow-xl rounded-2xl p-3">
+                                <p className="text-sm text-gray-400 text-center">هیچ به‌روزرسانی‌ای یافت نشد</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -190,7 +224,7 @@ export default function Dashboard() {
             <ModalView
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                width="w-[600px]"
+                width="w-full max-w-[600px] mx-4"
                 height="h-auto"
             >
                 <div className="p-6">

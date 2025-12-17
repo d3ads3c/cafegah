@@ -67,7 +67,7 @@ export default function Login() {
         }
     }
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-2 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="text-center">
                     <Link href="/" className="inline-flex items-center gap-2">
@@ -97,7 +97,7 @@ export default function Login() {
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10">
+                <div className="bg-white py-8 px-4 shadow-xl rounded-2xl sm:px-10">
                     {message && (
                         <div
                             className={`text-sm text-center w-full mb-10 p-3 rounded-lg text-red-700 bg-red-50 border border-red-200`}

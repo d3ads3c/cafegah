@@ -13,6 +13,13 @@ export default function Profile() {
         Status: ""
     })
 
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [pwdMessage, setPwdMessage] = useState<string | null>(null);
+    const [pwdStatus, setPwdStatus] = useState<"success" | "error" | null>(null);
+    const [pwdLoading, setPwdLoading] = useState(false);
+
     useEffect(() => {
         const checkInfo = async () => {
             try {
@@ -36,6 +43,61 @@ export default function Profile() {
         checkInfo();
     }, []);
 
+    const handleChangePassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setPwdMessage(null);
+        setPwdStatus(null);
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            setPwdMessage("همه فیلدها الزامی هستند");
+            setPwdStatus("error");
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            setPwdMessage("رمز عبور جدید و تکرار آن یکسان نیست");
+            setPwdStatus("error");
+            return;
+        }
+        if (newPassword.length < 12) {
+            setPwdMessage("رمز عبور باید حداقل 12 کاراکتر باشد");
+            setPwdStatus("error");
+            return;
+        }
+
+        try {
+            setPwdLoading(true);
+            const res = await fetch("/api/user/change-password", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword,
+                }),
+            });
+            const data = await res.json();
+            if (data.Status === "Success") {
+                setPwdMessage("رمز عبور با موفقیت تغییر کرد");
+                setPwdStatus("success");
+                setCurrentPassword("");
+                setNewPassword("");
+                setConfirmPassword("");
+            } else if (data.msg === "LoggedOut") {
+                setPwdMessage("لطفاً دوباره وارد شوید");
+                setPwdStatus("error");
+            } else {
+                setPwdMessage(data.msg || "تغییر رمز عبور ناموفق بود");
+                setPwdStatus("error");
+            }
+        } catch (err) {
+            console.error("[ChangePassword] error:", err);
+            setPwdMessage("خطا در تغییر رمز عبور");
+            setPwdStatus("error");
+        } finally {
+            setPwdLoading(false);
+        }
+    };
+
 
     return (
         <div>
@@ -46,9 +108,9 @@ export default function Profile() {
 
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
                 {/* Profile Info */}
-                <div className="p-6 border-b border-gray-200">
+                <div className="p-4 sm:p-6 border-b border-gray-200">
                     <form className="space-y-6">
-                        <div className="grid grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                             <div>
                                 <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
                                     نام
@@ -106,7 +168,7 @@ export default function Profile() {
                         <div className="flex justify-end">
                             <button
                                 type="submit"
-                                className="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-xl hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                                className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-xl hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
                             >
                                 ذخیره تغییرات
                             </button>
@@ -115,9 +177,9 @@ export default function Profile() {
                 </div>
 
                 {/* Change Password */}
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                     <h3 className="text-lg font-bold text-gray-900 mb-6">تغییر رمز عبور</h3>
-                    <form className="space-y-6">
+                    <form className="space-y-6" onSubmit={handleChangePassword}>
                         <div>
                             <label htmlFor="current-password" className="block text-sm font-medium text-gray-700">
                                 رمز عبور فعلی
@@ -126,6 +188,8 @@ export default function Profile() {
                                 type="password"
                                 name="current-password"
                                 id="current-password"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
                                 className="bg-gray- border mt-1 block w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-3.5"
                             />
                         </div>
@@ -138,6 +202,8 @@ export default function Profile() {
                                 type="password"
                                 name="new-password"
                                 id="new-password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
                                 className="bg-gray- border mt-1 block w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-3.5"
                             />
                         </div>
@@ -150,16 +216,25 @@ export default function Profile() {
                                 type="password"
                                 name="confirm-password"
                                 id="confirm-password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                                 className="bg-gray- border mt-1 block w-full rounded-xl border-gray-300 focus:border-teal-500 focus:ring-teal-500 sm:text-sm p-3.5"
                             />
                         </div>
 
+                        {pwdMessage && (
+                            <div className={`text-sm ${pwdStatus === "success" ? "text-emerald-600" : "text-red-500"}`}>
+                                {pwdMessage}
+                            </div>
+                        )}
+
                         <div className="flex justify-end">
                             <button
                                 type="submit"
-                                className="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-xl hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                                disabled={pwdLoading}
+                                className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-xl hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-60"
                             >
-                                تغییر رمز عبور
+                                {pwdLoading ? "در حال تغییر..." : "تغییر رمز عبور"}
                             </button>
                         </div>
                     </form>

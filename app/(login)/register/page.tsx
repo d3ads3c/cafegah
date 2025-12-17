@@ -104,7 +104,7 @@ export default function Register() {
         }
     }
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-1 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="text-center">
                     <Link href="/" className="inline-flex items-center gap-2">
@@ -134,7 +134,7 @@ export default function Register() {
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10">
+                <div className="bg-white py-8 px-4 shadow-xl rounded-2xl sm:px-10">
                     {message && (
                         <div
                             className={`text-sm text-center w-full mb-10 p-3 rounded-lg ${login ? "text-emerald-700 bg-emerald-50 border border-emerald-200" : "text-red-700 bg-red-50 border border-red-200"}`}
@@ -258,7 +258,7 @@ export default function Register() {
                             </div>
                         </div>
 
-                        <div className="flex items-center">
+                        {/* <div className="flex items-center">
                             <input
                                 id="terms"
                                 name="terms"
@@ -272,7 +272,7 @@ export default function Register() {
                                 </Link>
                                 {' '}را می‌پذیرم
                             </label>
-                        </div>
+                        </div> */}
 
                         <div>
                             <button

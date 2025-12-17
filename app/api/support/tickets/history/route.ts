@@ -1,0 +1,65 @@
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { ticket_id, page = 1, per_page = 50 } = body;
+
+    if (!ticket_id) {
+      return NextResponse.json(
+        { Status: "Failed", Error: "ticket_id is required" },
+        { status: 400 }
+      );
+    }
+
+    const formData = new FormData();
+    formData.append("ticket_id", ticket_id.toString());
+    formData.append("page", page.toString());
+    formData.append("per_page", per_page.toString());
+
+    const loggedUserCookie = req.cookies.get("LoggedUser");
+    const loggedUser = loggedUserCookie ? loggedUserCookie.value : null;
+    if (loggedUser) {
+      formData.append("logged_user_id", loggedUser);
+    } else {
+      formData.append("token", "null");
+    }
+
+    const xff = req.headers.get("x-forwarded-for");
+    const clientIp = xff
+      ? xff.split(",")[0].trim()
+      : req.headers.get("x-real-ip") || "";
+    if (clientIp) formData.append("ipaddress", clientIp);
+
+    const response = await fetch(
+      "http://localhost:8000/support/ticket/detail",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.Status === "Success") {
+      return NextResponse.json(data, { status: 200 });
+    } else if (data.Status === "Logout") {
+      const cookieHeader = `LoggedUser=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict`;
+      const resp = NextResponse.json({ msg: "LoggedOut" }, { status: 200 });
+      resp.headers.set("Set-Cookie", cookieHeader);
+      return resp;
+    }
+
+    return NextResponse.json(
+      { Status: data.Status || "Failed", Error: data.Error || "Failed to fetch ticket detail" },
+      { status: response.status || 500 }
+    );
+  } catch (error) {
+    console.error("Ticket detail error:", error);
+    return NextResponse.json(
+      { Status: "Failed", Error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+

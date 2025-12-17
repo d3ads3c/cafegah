@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { BlogApiPost, BlogCategory } from '@/types/AllTypes';
+import { fetchBlogCategories, fetchBlogList } from '@/app/lib/blogApi';
 
-interface BlogPost {
+interface UiBlogPost {
     id: string;
     title: string;
     excerpt: string;
@@ -17,59 +19,20 @@ interface BlogPost {
     featured?: boolean;
 }
 
-const samplePosts: BlogPost[] = [
-    {
-        id: '1',
-        title: 'راهنمای جامع مدیریت کافه',
-        excerpt: 'در این مقاله به بررسی نکات کلیدی در مدیریت موفق یک کافه می‌پردازیم...',
-        coverImage: '/img/blog/cafe-management.jpg',
-        date: '۱۰ مهر ۱۴۰۲',
-        author: 'علی محمدی',
-        slug: 'comprehensive-cafe-management-guide',
-        categories: ['مدیریت کافه', 'کسب و کار'],
-        readingTime: '۵ دقیقه',
-        featured: true
-    },
-    {
-        id: '2',
-        title: 'ترندهای طراحی دکوراسیون کافه در سال ۱۴۰۲',
-        excerpt: 'آشنایی با جدیدترین سبک‌های طراحی داخلی کافه‌ها و رستوران‌ها...',
-        coverImage: '/img/blog/cafe-design.jpg',
-        date: '۵ مهر ۱۴۰۲',
-        author: 'سارا احمدی',
-        slug: 'cafe-design-trends-2023',
-        categories: ['دکوراسیون', 'طراحی داخلی'],
-        readingTime: '۶ دقیقه',
-        featured: true
-    },
-    {
-        id: '3',
-        title: 'بهترین دستگاه‌های قهوه برای کافه',
-        excerpt: 'راهنمای انتخاب و خرید بهترین دستگاه‌های قهوه برای کافه‌های کوچک و بزرگ...',
-        coverImage: '/img/blog/coffee-machines.jpg',
-        date: '۱ مهر ۱۴۰۲',
-        author: 'رضا کریمی',
-        slug: 'best-coffee-machines',
-        categories: ['تجهیزات کافه', 'قهوه'],
-        readingTime: '۸ دقیقه',
-        featured: false
-    },
-    {
-        id: '4',
-        title: 'منوی پرفروش کافه',
-        excerpt: 'چگونه یک منوی جذاب و پرفروش برای کافه طراحی کنیم...',
-        coverImage: '/img/blog/cafe-menu.jpg',
-        date: '۲۸ شهریور ۱۴۰۲',
-        author: 'مریم حسینی',
-        slug: 'best-selling-menu',
-        categories: ['منو', 'بازاریابی'],
-        readingTime: '۴ دقیقه',
-        featured: true
-    }
-];
-
-// All unique categories
-const allCategories = Array.from(new Set(samplePosts.flatMap(post => post.categories))).sort();
+function mapApiPostToUi(post: BlogApiPost): UiBlogPost {
+    return {
+        id: String(post.ID),
+        title: post.Title,
+        excerpt: post.Excerpt || '',
+        coverImage: post.Cover || '/img/blog/default-cover.jpg',
+        date: post.DatePublished?.replace('|', ' | ') || '',
+        author: post.AuthorID || 'ناشناس',
+        slug: post.Slug,
+        categories: post.Category ? [post.Category] : [],
+        readingTime: post.ReadingTime ? `${post.ReadingTime} دقیقه` : '',
+        featured: post.Featured,
+    };
+}
 
 export default function BlogPage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -77,22 +40,68 @@ export default function BlogPage() {
     const [sortBy, setSortBy] = useState('newest');
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-    // Filter and sort posts
-    const filteredPosts = samplePosts.filter(post => {
-        const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = selectedCategory === 'all' || post.categories.includes(selectedCategory);
-        return matchesSearch && matchesCategory;
-    }).sort((a, b) => {
-        if (sortBy === 'newest') {
-            return new Date(b.date).getTime() - new Date(a.date).getTime();
+    const [posts, setPosts] = useState<UiBlogPost[]>([]);
+    const [categories, setCategories] = useState<BlogCategory[]>([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function load() {
+            try {
+                setLoading(true);
+                setError(null);
+
+                const [listRes, cats] = await Promise.all([
+                    fetchBlogList({
+                        status: 'published',
+                        page,
+                        per_page: 9,
+                        category: selectedCategory !== 'all' ? selectedCategory : undefined,
+                        search: searchQuery || undefined,
+                        order_by: 'date_published',
+                        order_dir: 'DESC',
+                    }),
+                    categories.length === 0 ? fetchBlogCategories() : Promise.resolve(categories),
+                ]);
+
+                if (cancelled) return;
+
+                if (listRes.Status !== 'Success') {
+                    throw new Error(listRes.Error || 'خطا در دریافت مقالات');
+                }
+
+                setPosts((listRes.Blogs || []).map(mapApiPostToUi));
+                setTotalPages(listRes.TotalPages || 1);
+                setCategories(cats);
+            } catch (err: unknown) {
+                if (!cancelled) {
+                    const message =
+                        err instanceof Error ? err.message : 'خطای غیرمنتظره رخ داد';
+                    setError(message);
+                }
+            } finally {
+                if (!cancelled) {
+                    setLoading(false);
+                }
+            }
         }
-        // Add more sorting options here
-        return 0;
-    });
+
+        load();
+
+        return () => {
+            cancelled = true;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, selectedCategory, searchQuery]);
 
     // Featured posts for the hero section
-    const featuredPosts = samplePosts.filter(post => post.featured);
+    const featuredPosts = posts.filter(post => post.featured);
+
+    const allCategories = categories.map((c) => c.Name);
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -209,9 +218,21 @@ export default function BlogPage() {
             </div>
 
             {/* Blog Posts Grid/List */}
+            {loading && (
+                <div className="text-center py-12">
+                    <p className="text-gray-600">در حال بارگذاری مقالات...</p>
+                </div>
+            )}
+
+            {error && !loading && (
+                <div className="text-center py-12">
+                    <p className="text-red-600">{error}</p>
+                </div>
+            )}
+
             {viewMode === 'grid' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredPosts.map((post) => (
+                    {posts.map((post) => (
                         <Link href={`/blog/${post.slug}`} key={post.id} className="group">
                             <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-md transition-shadow">
                                 <div className="relative h-48">
@@ -247,7 +268,7 @@ export default function BlogPage() {
                 </div>
             ) : (
                 <div className="space-y-6">
-                    {filteredPosts.map((post) => (
+                    {posts.map((post) => (
                         <Link href={`/blog/${post.slug}`} key={post.id} className="group">
                             <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-md transition-shadow">
                                 <div className="flex flex-col md:flex-row">
@@ -286,7 +307,7 @@ export default function BlogPage() {
             )}
 
             {/* No Results Message */}
-            {filteredPosts.length === 0 && (
+            {!loading && !error && posts.length === 0 && (
                 <div className="text-center py-12">
                     <h3 className="text-xl font-bold text-gray-900 mb-2">نتیجه‌ای یافت نشد</h3>
                     <p className="text-gray-600">لطفاً با معیارهای دیگری جستجو کنید</p>
@@ -296,11 +317,23 @@ export default function BlogPage() {
             {/* Pagination */}
             <div className="mt-12 flex justify-center">
                 <nav className="flex items-center gap-2">
-                    <button className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50">قبلی</button>
-                    <button className="px-4 py-2 rounded-lg bg-teal-500 text-white">۱</button>
-                    <button className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50">۲</button>
-                    <button className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50">۳</button>
-                    <button className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50">بعدی</button>
+                    <button
+                        className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+                        disabled={page <= 1}
+                        onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    >
+                        قبلی
+                    </button>
+                    <span className="px-4 py-2 rounded-lg bg-teal-500 text-white">
+                        {page}
+                    </span>
+                    <button
+                        className="px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+                        disabled={page >= totalPages}
+                        onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    >
+                        بعدی
+                    </button>
                 </nav>
             </div>
         </div>

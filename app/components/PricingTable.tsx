@@ -63,7 +63,7 @@ const features = [
     category: "مدیریت سفارشات",
     name: "فیلتر سفارشات",
     desc: "امکان جستوجو از طریق شماره، نام و یا تاریخ",
-    plans: ["حرفه‌ای", "ویژه"],
+    plans: ["حرفه‌ای", "ویژه", "پایه"],
   },
   {
     id: 10,
@@ -134,7 +134,7 @@ const plans = [
   {
     title: "پلن پایه",
     key: "پایه",
-    price: "2.999,000",
+    price: "5.999,000",
     period: "سالانه",
     // description: "قابلیت های پایه",
     highlight: false,
@@ -142,7 +142,7 @@ const plans = [
   {
     title: "پلن حرفه‌ای",
     key: "حرفه‌ای",
-    price: "3,999,000",
+    price: "7,999,000",
     period: "سالانه",
     // description: "مناسب",
     highlight: true,
@@ -150,7 +150,7 @@ const plans = [
   {
     title: "پلن ویژه",
     key: "ویژه",
-    price: "5,999,000",
+    price: "9,999,000",
     period: "سالانه",
     // description: "مناسب برای کافه‌های بزرگ",
     highlight: false,

@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "@flaticon/flaticon-uicons/css/all/all.css";
 import AuthChecker from "../components/AuthChecker";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -37,9 +38,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl">
-      <body
-        className={`${bakh.className} antialiased`}
-      >
+      <GoogleAnalytics gaId={"G-QW12MSVBD0"} />
+      <body className={`${bakh.className} antialiased`}>
         <AuthChecker />
         {children}
       </body>

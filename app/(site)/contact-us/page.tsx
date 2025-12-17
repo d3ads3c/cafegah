@@ -1,11 +1,12 @@
 import Image from "next/image";
+import Link from "next/link";
 export default function ContactUs() {
   return (
     <main className="">
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-teal-600/90 to-teal-800/90 z-0" />
         <div className="absolute inset-0 bg-[url('/img/about-hero.jpg')] bg-cover bg-center mix-blend-overlay" />
-        <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
+        <div className="relative mx-auto max-w-7xl px-6 text-center">
           <h1 className="text-4xl font-black text-white mb-6">
             ارتباط با کافه گاه
           </h1>
@@ -15,24 +16,21 @@ export default function ContactUs() {
           </p>
         </div>
       </section>
-      <div className="flex gap-5 pb-10 mt-32 mx-auto max-w-7xl px-6">
-        <div className="w-1/2 border border-gray-200 rounded-3xl">
-          <div className="bg-white p-8 rounded-3xl">
+      <div className="flex flex-col-reverse xl:flex-row gap-5 pb-10 xl:mt-32 mx-auto max-w-7xl px-1 xl:px-6">
+        <div className="xl:w-1/2 border border-gray-200 rounded-3xl">
+          <div className="bg-white xl:p-8 px-3 py-5 rounded-3xl">
             <div>
               <h2 className="text-[var(--primaryColor)] font-bold">
                 فرم آنلاین
               </h2>
-              <h2 className="text-2xl">
-                به راحتی با کافه گاه در تماس باشید.
-              </h2>
+              <h2 className="text-2xl">به راحتی با کافه گاه در تماس باشید.</h2>
               <p className="mt-1">
-                با فرم تماس کافه گاه به سادگی نظرات، پیشنهادات و شکایات
-                خود را به ما برسانید و از یک ارتباط پایدار بین ما و مشتریان
-                مطمئن شوید.
+                با فرم تماس کافه گاه به سادگی نظرات، پیشنهادات و شکایات خود را
+                به ما برسانید و از یک ارتباط پایدار بین ما و مشتریان مطمئن شوید.
               </p>
             </div>
             <div>
-              <div className="flex items-center gap-10 my-5">
+              <div className="flex items-center gap-4 xl:gap-10 my-5">
                 <div className="w-1/2">
                   <p className="mb-1">نام</p>
                   <input
@@ -75,7 +73,7 @@ export default function ContactUs() {
             </div>
           </div>
         </div>
-        <div className="w-1/2 space-y-3 h-full sticky top-32">
+        <div className="xl:w-1/2 space-y-3 h-full xl:sticky xl:top-32">
           <div className="bg-white rounded-3xl p-7">
             <Image
               src={"/img/logo/512.png"}
@@ -88,14 +86,20 @@ export default function ContactUs() {
               نرم افزار مدیریت کافه گاه
             </h2>
           </div>
-          <div className="bg-white rounded-3xl p-7 space-y-3">
+          <div className="bg-white rounded-3xl xl:p-7 px-1 space-y-3">
             <div className="p-4 rounded-3xl w-full flex items-center bg-gray-50 gap-2">
               <div className="size-12 min-w-[48px] rounded-full bg-teal-100 text-teal-600 flex items-center justify-center">
                 <i className="fi fi-sr-phone-call mt-1.5"></i>
               </div>
-              <div>
-                <p className="font-bold">تلفن</p>
-                <h3 className="text-gray-500">09354244001</h3>
+              <div className="flex items-center justify-between w-full">
+                <Link href={"tel:+982177582693"} className="text-right">
+                  <p className="font-bold">تلفن</p>
+                  <h3 className="text-gray-500">021-77582693</h3>
+                </Link>
+                <Link href={"tel:+989354244001"} className="text-right">
+                  <p className="font-bold">تلفن همراه</p>
+                  <h3 className="text-gray-500">09354244001</h3>
+                </Link>
               </div>
             </div>
             <div className="p-4 rounded-3xl w-full flex items-center bg-gray-50 gap-2">

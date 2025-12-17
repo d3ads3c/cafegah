@@ -10,7 +10,7 @@ const footerLinks = {
   company: [
     { name: "درباره ما", href: "/about-us" },
     { name: "تماس با ما", href: "/contact-us" },
-    { name: "وبلاگ", href: "/blog" },
+    // { name: "وبلاگ", href: "/blog" },
     // { name: 'همکاری با ما', href: '/careers' },
   ],
   //   legal: [
@@ -134,7 +134,7 @@ export default function Footer() {
         </div>
         {/* Namads */}
         <div className="flex w-full flex-wrap items-center gap-4 justify-end mt-8 sm:mt-10">
-          <div className="size-32 rounded-2xl p-3 bg-white">
+          {/* <div className="size-32 rounded-2xl p-3 bg-white">
             <Link
               referrerPolicy="origin"
               target="_blank"
@@ -147,7 +147,7 @@ export default function Footer() {
                 alt="Enamad Logo"
               ></Image>
             </Link>
-          </div>
+          </div> */}
           <div className="size-32 rounded-2xl p-3 bg-white">
             <Link
               referrerPolicy="origin"
@@ -194,7 +194,7 @@ export default function Footer() {
               ))}
             </div>
             <p className="text-xs sm:text-sm text-gray-500 text-center">
-              © {new Date().getFullYear()} کافه گاه. تمامی حقوق محفوظ است.
+              1404 کافه گاه. تمامی حقوق محفوظ است.
             </p>
           </div>
         </div>

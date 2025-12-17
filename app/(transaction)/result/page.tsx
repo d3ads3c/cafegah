@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 
 // Types
 type PaymentStatus = {
@@ -77,7 +77,7 @@ function TransactionDetails({ params }: { params: TransactionParams }) {
     );
 }
 
-export default function PayResult() {
+function PayResultContent() {
     const sp = useSearchParams();
 
     // Memoize parsed params for stability
@@ -87,7 +87,7 @@ export default function PayResult() {
 
     return (
         <div className="h-screen max-h-screen w-full flex items-center justify-center bg-[#fafafa]">
-            <div className="w-[40%] max-w-[40%] bg-white rounded-2xl p-10 border border-gray-100">
+            <div className="xl:w-[40%] w-full xl:max-w-[40%] bg-white rounded-2xl p-10 border border-gray-100">
                 <div className="text-center">
                     <StatusIcon isSuccess={status.isSuccess} />
                     <h1 className={`${status.isSuccess ? "text-emerald-400" : "text-red-500"} text-xl font-black -mt-7 mb-3`}>
@@ -107,5 +107,13 @@ export default function PayResult() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function PayResult() {
+    return (
+        <Suspense fallback={<div className="p-10 text-center">در حال بارگذاری نتیجه پرداخت...</div>}>
+            <PayResultContent />
+        </Suspense>
     );
 }

@@ -130,27 +130,27 @@ export default function SubscriptionManagementPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <div className="mx-auto px-4">
+        <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+            <div className="mx-auto px-2 sm:px-4">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">مدیریت اشتراک</h1>
-                        <p className="text-gray-500 mt-2">مدیریت جزئیات و کاربران اشتراک خود</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">مدیریت اشتراک</h1>
+                        <p className="text-sm sm:text-base text-gray-500 mt-2">مدیریت جزئیات و کاربران اشتراک خود</p>
                     </div>
                     <Link
                         href="/dashboard"
-                        className="text-teal-600 hover:text-teal-700 flex items-center gap-2"
+                        className="text-teal-600 hover:text-teal-700 flex items-center gap-2 text-sm sm:text-base"
                     >
                         <i className="fi fi-br-arrow-left"></i>
                         بازگشت
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
                     {/* Subscription Details */}
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+                        <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6">
                             <h2 className="text-xl font-bold text-gray-900 mb-6">اطلاعات اشتراک</h2>
 
                             <div className="space-y-6">
@@ -239,80 +239,82 @@ export default function SubscriptionManagementPage() {
                         </div>
 
                         {/* Invited Users Section */}
-                        <div className="bg-white rounded-2xl border border-gray-100 p-6 mt-8">
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-gray-900">کاربران دعوت شده</h2>
+                        <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 mt-4 sm:mt-8">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+                                <h2 className="text-lg sm:text-xl font-bold text-gray-900">کاربران دعوت شده</h2>
                                 <span className="bg-teal-100 text-teal-700 rounded-full px-3 py-1 text-sm font-bold">
                                     {invitedUsers.length} کاربر
                                 </span>
                             </div>
 
                             {invitedUsers.length > 0 ? (
-                                <div className="overflow-x-auto">
-                                    <table className="w-full">
-                                        <thead>
-                                            <tr className="border-b border-gray-100">
-                                                <th className="text-right py-3 px-4 text-sm font-bold text-gray-700">
-                                                    ایمیل
-                                                </th>
-                                                <th className="text-right py-3 px-4 text-sm font-bold text-gray-700">
-                                                    وضعیت
-                                                </th>
-                                                <th className="text-right py-3 px-4 text-sm font-bold text-gray-700">
-                                                    دسترسی‌ها
-                                                </th>
-                                                <th className="text-right py-3 px-4 text-sm font-bold text-gray-700">
-                                                    عملیات
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {invitedUsers.map((user) => (
-                                                <tr
-                                                    key={user.UserID}
-                                                    className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
-                                                >
-                                                    <td className="py-3 px-4 text-gray-900 font-medium">
-                                                        {user.Email}
-                                                    </td>
-                                                    <td className="py-3 px-4">
-                                                        <span
-                                                            className={`text-xs font-bold px-3 py-1 rounded-full ${user.Status === 'active'
-                                                                ? 'bg-green-100 text-green-700'
-                                                                : user.Status === 'invited'
-                                                                    ? 'bg-yellow-100 text-yellow-700'
-                                                                    : 'bg-red-100 text-red-700'
-                                                                }`}
-                                                        >
-                                                            {user.Status === 'active'
-                                                                ? 'پذیرفته شده'
-                                                                : user.Status === 'invited'
-                                                                    ? 'دعوت شده'
-                                                                    : 'رد شده'}
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-3 px-4 text-gray-600 text-sm">
-                                                        <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                                                            {user.Permissions.split(',').length} دسترسی
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-3 px-4">
-                                                        <button
-                                                            onClick={() => handleRemoveUser(user.UserID)}
-                                                            className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded px-2 py-1 transition-colors"
-                                                        >
-                                                            <i className="fi fi-br-trash text-lg"></i>
-                                                        </button>
-                                                    </td>
+                                <div className="overflow-x-auto -mx-4 sm:mx-0">
+                                    <div className="min-w-full px-4 sm:px-0">
+                                        <table className="w-full">
+                                            <thead>
+                                                <tr className="border-b border-gray-100">
+                                                    <th className="text-right py-3 px-2 sm:px-4 text-xs sm:text-sm font-bold text-gray-700">
+                                                        ایمیل
+                                                    </th>
+                                                    <th className="text-right py-3 px-2 sm:px-4 text-xs sm:text-sm font-bold text-gray-700">
+                                                        وضعیت
+                                                    </th>
+                                                    <th className="text-right py-3 px-2 sm:px-4 text-xs sm:text-sm font-bold text-gray-700 hidden sm:table-cell">
+                                                        دسترسی‌ها
+                                                    </th>
+                                                    <th className="text-right py-3 px-2 sm:px-4 text-xs sm:text-sm font-bold text-gray-700">
+                                                        عملیات
+                                                    </th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {invitedUsers.map((user) => (
+                                                    <tr
+                                                        key={user.UserID}
+                                                        className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
+                                                    >
+                                                        <td className="py-3 px-2 sm:px-4 text-gray-900 font-medium text-xs sm:text-sm">
+                                                            <div className="truncate max-w-[150px] sm:max-w-none">{user.Email}</div>
+                                                        </td>
+                                                        <td className="py-3 px-2 sm:px-4">
+                                                            <span
+                                                                className={`text-xs font-bold px-2 sm:px-3 py-1 rounded-full ${user.Status === 'active'
+                                                                    ? 'bg-green-100 text-green-700'
+                                                                    : user.Status === 'invited'
+                                                                        ? 'bg-yellow-100 text-yellow-700'
+                                                                        : 'bg-red-100 text-red-700'
+                                                                    }`}
+                                                            >
+                                                                {user.Status === 'active'
+                                                                    ? 'پذیرفته شده'
+                                                                    : user.Status === 'invited'
+                                                                        ? 'دعوت شده'
+                                                                        : 'رد شده'}
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-3 px-2 sm:px-4 text-gray-600 text-xs sm:text-sm hidden sm:table-cell">
+                                                            <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                                                                {user.Permissions.split(',').length} دسترسی
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-3 px-2 sm:px-4">
+                                                            <button
+                                                                onClick={() => handleRemoveUser(user.UserID)}
+                                                                className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded px-2 py-1 transition-colors"
+                                                            >
+                                                                <i className="fi fi-br-trash text-base sm:text-lg"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             ) : (
                                 <div className="text-center py-8">
                                     <i className="fi fi-br-users text-4xl text-gray-300 mb-3 block"></i>
-                                    <p className="text-gray-500">هنوز کاربری دعوت نشده است</p>
+                                    <p className="text-gray-500 text-sm sm:text-base">هنوز کاربری دعوت نشده است</p>
                                 </div>
                             )}
                         </div>
@@ -320,7 +322,7 @@ export default function SubscriptionManagementPage() {
 
                     {/* Sidebar - Invite Button */}
                     <div>
-                        <div className="bg-white rounded-2xl border border-gray-100 p-6 sticky top-8">
+                        <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 sticky top-4 sm:top-8">
                             <h3 className="text-lg font-bold text-gray-900 mb-4">عملیات سریع</h3>
 
                             <button
