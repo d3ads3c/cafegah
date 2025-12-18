@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
             "phone",
             "plan",
             "billingAddress",
+            "enName"
         ];
 
         const missing = required.filter((k) => {

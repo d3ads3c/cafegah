@@ -57,27 +57,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/`, lastModified: DEFAULT_LAST_MODIFIED, changeFrequency: "weekly", priority: 1 },
     { url: `${base}/about-us`, lastModified: DEFAULT_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/contact-us`, lastModified: DEFAULT_LAST_MODIFIED, changeFrequency: "monthly", priority: 0.6 },
-    { url: `${base}/blog`, lastModified: DEFAULT_LAST_MODIFIED, changeFrequency: "daily", priority: 0.7 },
+    // { url: `${base}/blog`, lastModified: DEFAULT_LAST_MODIFIED, changeFrequency: "daily", priority: 0.7 },
   ];
 
   // Blog posts
-  try {
-    const posts = await fetchAllPublishedBlogPosts();
-    for (const post of posts) {
-      if (!post?.Slug) continue;
-      routes.push({
-        url: `${base}/blog/${post.Slug}`,
-        lastModified:
-          safeLastModified(post.DateUpdated) ||
-          safeLastModified(post.DatePublished) ||
-          DEFAULT_LAST_MODIFIED,
-        changeFrequency: "monthly",
-        priority: post.Featured ? 0.8 : 0.5,
-      });
-    }
-  } catch {
-    // If blog API is down, still return the static sitemap entries.
-  }
+//   try {
+//     const posts = await fetchAllPublishedBlogPosts();
+//     for (const post of posts) {
+//       if (!post?.Slug) continue;
+//       routes.push({
+//         url: `${base}/blog/${post.Slug}`,
+//         lastModified:
+//           safeLastModified(post.DateUpdated) ||
+//           safeLastModified(post.DatePublished) ||
+//           DEFAULT_LAST_MODIFIED,
+//         changeFrequency: "monthly",
+//         priority: post.Featured ? 0.8 : 0.5,
+//       });
+//     }
+//   } catch {
+//     // If blog API is down, still return the static sitemap entries.
+//   }
 
   return routes;
 }

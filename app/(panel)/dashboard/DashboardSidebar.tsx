@@ -74,7 +74,7 @@ export default function DashboardSidebar() {
     };
 
     return (
-        <div className={`w-64 bg-white border-l border-gray-200 ${pathname === '/dashboard/subscription/new' && "hidden"}`}>
+        <div className={`w-64 bg-white border-l h-full border-gray-200 ${pathname === '/dashboard/subscription/new' && "hidden"}`}>
             <div className="flex flex-col h-full">
                 {/* Logo */}
                 <div className="p-4 border-b border-gray-200">

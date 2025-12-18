@@ -25,6 +25,7 @@ export type MySubscriptions = {
     Address: string
     Invoice: string
     Type: string
+    Menu: string
 }
 
 export type MyInvoicesType = {
