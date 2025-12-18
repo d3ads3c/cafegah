@@ -37,9 +37,8 @@ export async function POST(req: NextRequest) {
         });
         const data = await response.json();
         console.log(data)
-        console.log(formData)
-        if (data.Status == "Success") {
-            const response = NextResponse.json({ "Status": "Success" }, { status: 200 });
+        if (data.Status == "Succeess") {
+            const response = NextResponse.json({ Status: "Success" }, { status: 200 });
             return response;
         } else if (data == "Logout") {
             // Upstream indicated logout — clear the LoggedUser cookie by sending
