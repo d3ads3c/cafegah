@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIp } from "../../_utils";
 
 export async function POST(request: NextRequest) {
     try {
@@ -25,8 +26,8 @@ export async function POST(request: NextRequest) {
         }
         formData.append("serial", serial);
 
-        const xff = request.headers.get('x-forwarded-for');
-        const clientIp = xff ? xff.split(',')[0].trim() : (request.headers.get('x-real-ip') || '');
+        // Use improved IP extraction utility
+        const clientIp = getClientIp(request);
         if (clientIp) formData.append('ipaddress', clientIp);
 
         const backendResponse = await fetch("http://localhost:8000/subscription/detail", {

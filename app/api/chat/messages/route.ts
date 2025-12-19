@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIp } from "../../_utils";
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const { page, per_page } = body;
 
-        // Get client IP
-        const xff = req.headers.get('x-forwarded-for');
-        const clientIp = xff ? xff.split(',')[0].trim() : (req.headers.get('x-real-ip') || '');
+        // Use improved IP extraction utility
+        const clientIp = getClientIp(req);
 
         // Read ChatUserId cookie (required for user identification, no login needed)
         let chatUserId: string | null = null;

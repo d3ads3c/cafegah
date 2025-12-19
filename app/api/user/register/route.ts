@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { getClientIp } from "../../_utils";
 
 export async function POST(req: NextRequest) {
     try {
@@ -16,20 +17,15 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ msg: 'missing_fields' }, { status: 400 });
         }
 
-        // Determine client IP. Prefer X-Forwarded-For (can contain a list), then X-Real-IP,
-        // then fall back to any ip property that might exist on the request object.
-        const xff = req.headers.get('x-forwarded-for');
-        // Prefer the first value in X-Forwarded-For, otherwise fall back to X-Real-IP.
-        // Avoid using `any` cast on `req` — NextRequest doesn't expose an `ip` property.
-        const clientIp = xff ? xff.split(',')[0].trim() : (req.headers.get('x-real-ip') || '');
-
         const formData = new FormData();
         formData.append('Phone', username);
         formData.append("password", md5Password);
         formData.append('Fname', Fname);
         formData.append('Lname', Lname);
         formData.append('Email', Email)
-        // Include client IP for upstream service if available
+        
+        // Use improved IP extraction utility
+        const clientIp = getClientIp(req);
         if (clientIp) formData.append('IPAddress', clientIp);
 
         const upstreamHeaders: Record<string, string> = {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIp } from "../../_utils";
 
 type Permission =
     | "view_dashboard"
@@ -53,8 +54,8 @@ export async function POST(request: NextRequest) {
         const loggedUserCookie = request.cookies.get("LoggedUser");
         const loggedUser = loggedUserCookie ? loggedUserCookie.value : null;
 
-        const xff = request.headers.get('x-forwarded-for');
-        const clientIp = xff ? xff.split(',')[0].trim() : (request.headers.get('x-real-ip') || '');
+        // Use improved IP extraction utility
+        const clientIp = getClientIp(request);
 
         // Send invitation request for each user
         const invitationPromises = body.users.map(async (user) => {

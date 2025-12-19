@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIp } from "../../_utils";
 
 export async function POST(req: NextRequest) {
     try {
@@ -18,8 +19,8 @@ export async function POST(req: NextRequest) {
             formData.append("token", "null");
         }
 
-        const xff = req.headers.get('x-forwarded-for');
-        const clientIp = xff ? xff.split(',')[0].trim() : (req.headers.get('x-real-ip') || '');
+        // Use improved IP extraction utility
+        const clientIp = getClientIp(req);
         if (clientIp) formData.append('ipaddress', clientIp);
 
 

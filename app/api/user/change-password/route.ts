@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { getClientIp } from "../../_utils";
 
 export async function POST(req: NextRequest) {
     try {
@@ -28,8 +29,8 @@ export async function POST(req: NextRequest) {
         formData.append("oldpassword", currentHash);
         formData.append("newpassword", newHash);
 
-        const xff = req.headers.get("x-forwarded-for");
-        const clientIp = xff ? xff.split(",")[0].trim() : (req.headers.get("x-real-ip") || "");
+        // Use improved IP extraction utility
+        const clientIp = getClientIp(req);
         if (clientIp) formData.append("ipaddress", clientIp);
 
         const upstream = await fetch("http://localhost:8000/user/change_password", {

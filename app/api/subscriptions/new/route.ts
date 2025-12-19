@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIp } from "../../_utils";
 
 export async function POST(req: NextRequest) {
     try {
@@ -63,16 +64,15 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "missing_fields", missing }, { status: 400 });
         }
 
-        // Attach client IP if available
-        const xff = req.headers.get("x-forwarded-for");
-        const clientIp = xff ? xff.split(",")[0].trim() : req.headers.get("x-real-ip") || "";
-
-
         // Convert payload into FormData and forward to upstream API as multipart/form-data
         // (do not set content-type header; fetch will add the correct boundary)
         const form = new FormData();
         const loggedUserCookie = req.cookies.get("LoggedUser");
         const loggedUser = loggedUserCookie ? loggedUserCookie.value : null;
+        
+        // Use improved IP extraction utility
+        const clientIp = getClientIp(req);
+        
         // send token and ipaddress as separate form fields so upstream can parse them as objects
         form.append("token", String(loggedUser || ""));
         form.append("ipaddress", String(clientIp || ""));

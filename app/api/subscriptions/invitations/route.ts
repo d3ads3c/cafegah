@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIp } from "../../_utils";
 
 export async function POST(request: NextRequest) {
     try {
@@ -15,8 +16,8 @@ export async function POST(request: NextRequest) {
             formData.append("token", "null");
         }
 
-        const xff = request.headers.get('x-forwarded-for');
-        const clientIp = xff ? xff.split(',')[0].trim() : (request.headers.get('x-real-ip') || '');
+        // Use improved IP extraction utility
+        const clientIp = getClientIp(request);
         if (clientIp) formData.append('ipaddress', clientIp);
 
         const backendResponse = await fetch("http://localhost:8000/subscription/invitations", {
@@ -34,10 +35,16 @@ export async function POST(request: NextRequest) {
                 },
                 { status: 200 }
             );
-        } else if (backendData === "Logout") {
-            const cookieHeader = `LoggedUser=; Path=/; Max-Age=0; HttpOnly; SameSite=Strict`;
+        } else if (backendData === "Logout" || backendData.Status === "Logout") {
+            // Use Next.js cookies API to properly clear the cookie
             const resp = NextResponse.json({ msg: "LoggedOut" }, { status: 401 });
-            resp.headers.set("Set-Cookie", cookieHeader);
+            resp.cookies.set("LoggedUser", "", {
+                path: "/",
+                maxAge: 0,
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+            });
             return resp;
         }
 
