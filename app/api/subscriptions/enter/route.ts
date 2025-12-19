@@ -27,8 +27,7 @@ export async function POST(request: NextRequest) {
     formData.append("serial", serial);
 
     // Use improved IP extraction utility
-    const clientIp = getClientIp(request);
-    if (clientIp) formData.append("ipaddress", clientIp);
+formData.append("ipaddress", "127.0.0.1");
     const backendResponse = await fetch(
       "http://localhost:8000/subscription/enter",
       {
