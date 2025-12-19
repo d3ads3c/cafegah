@@ -20,8 +20,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Use improved IP extraction utility
-        const clientIp = getClientIp(req);
-        if (clientIp) formData.append('ipaddress', "127.0.0.1");
+        formData.append('ipaddress', "127.0.0.1");
 
 
         const response = await fetch("http://localhost:8000/pay/submit", {
