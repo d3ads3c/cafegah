@@ -13,47 +13,26 @@ export async function POST(req: NextRequest) {
         const clientIp = xff ? xff.split(',')[0].trim() : (req.headers.get('x-real-ip') || '');
         if (clientIp) formData.append('IPAddress', clientIp);
         console.log(formData)
-        const response = await fetch("http://localhost:8000/user/login", {
+        const upstreamResponse = await fetch("http://localhost:8000/user/login", {
             method: "POST",
             body: formData,
         });
-        const data = await response.json();
+        const data = await upstreamResponse.json();
         console.log(data)
         if (data.token) {
             console.log(data.token)
-            // Function to set cookie
-            type CookieOptions = {
-                path?: string;
-                maxAge?: number;
-                secure?: boolean;
-                httpOnly?: boolean;
-                sameSite?: "Strict" | "Lax" | "None";
-            };
-
-            function setCookie(
-                name: string,
-                value: string,
-                options: CookieOptions
-            ) {
-                let cookie = `${name}=${value}; Path=${options.path || "/"}; Max-Age=${options.maxAge}`;
-                if (options.secure) cookie += "; Secure";
-                if (options.httpOnly) cookie += "; HttpOnly";
-                if (options.sameSite) cookie += `; SameSite=${options.sameSite}`;
-                return cookie;
-            }
-
-            // Set the cookie in the response header
-            const cookieHeader = setCookie("LoggedUser", data.token, {
-                maxAge: 12 * 60 * 60, // 2 hours in seconds
-                path: "/",
-                httpOnly: true,
-                secure: false,
-                sameSite: "Strict",
-            });
-
+            // Use Next.js cookies API to properly set the cookie
             const response = NextResponse.json({ msg: "LoggedIn" }, { status: 200 });
-            console.log(response)
-            response.headers.set("Set-Cookie", cookieHeader);
+            
+            // Set cookie using Next.js cookies API (more reliable in production)
+            response.cookies.set("LoggedUser", data.token, {
+                path: "/",
+                maxAge: 12 * 60 * 60, // 12 hours in seconds
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // Secure in production only
+                sameSite: "lax", // Changed from Strict to Lax for better redirect compatibility
+            });
+            
             return response;
         } else if (data.Status == "No User Found") {
             console.log(data)

@@ -49,13 +49,21 @@ export async function POST(req: NextRequest) {
             console.log(data.Error)
         }
         if (data.token) {
-            // create cookie header
-            const cookie = `LoggedUser=${data.token}; Path=/; Max-Age=${2 * 60 * 60}; HttpOnly; SameSite=Strict`;
+            // Use Next.js cookies API to properly set the cookie
             const res = NextResponse.json(
                 { msg: 'LoggedIn', Username: data.Username, FullName: data.FullName },
                 { status: 200 }
             );
-            res.headers.set('Set-Cookie', cookie);
+            
+            // Set cookie using Next.js cookies API (more reliable in production)
+            res.cookies.set("LoggedUser", data.token, {
+                path: "/",
+                maxAge: 12 * 60 * 60, // 12 hours in seconds (matching login route)
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // Secure in production only
+                sameSite: "lax", // Changed from Strict to Lax for better redirect compatibility
+            });
+            
             return res;
         }
 
