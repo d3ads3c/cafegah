@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
                 path: "/",
                 maxAge: 12 * 60 * 60, // 12 hours in seconds
                 httpOnly: false,
-                secure: process.env.NODE_ENV === "production", // Secure in production only
+                // secure: process.env.NODE_ENV === "production", // Secure in production only
                 // sameSite: "lax", // Changed from Strict to Lax for better redirect compatibility
             });
             
