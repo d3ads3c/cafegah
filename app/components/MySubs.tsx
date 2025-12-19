@@ -31,7 +31,7 @@ export default function MySubs() {
   //     Days: ""
   // })
   const [subs, setSubs] = useState<MySubscriptions[] | null>(null);
-  const [invitations, setInvitations] = useState<Invitation[]>([]);
+  // const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [modalSerial, setModalSerial] = useState<string | undefined>(undefined);
   const router = useRouter();
@@ -51,49 +51,49 @@ export default function MySubs() {
     } catch (err) {}
   };
 
-  const GetInvitations = async () => {
-    try {
-      const res = await fetch("/api/subscriptions/invitations", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-      });
+  // const GetInvitations = async () => {
+  //   try {
+  //     const res = await fetch("/api/subscriptions/invitations", {
+  //       method: "POST",
+  //       credentials: "include",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({}),
+  //     });
 
-      const data = await res.json();
-      let invitationsList: Invitation[] = [];
+  //     const data = await res.json();
+  //     let invitationsList: Invitation[] = [];
 
-      // API may return either an array of invitations directly
-      // or an object like { Status: 'Success', Invitations: [...] }
-      if (Array.isArray(data)) {
-        invitationsList = data as Invitation[];
-      } else if (
-        data &&
-        data.Status === "Success" &&
-        Array.isArray(data.Invitations)
-      ) {
-        invitationsList = data.Invitations as Invitation[];
-      } else if (data && Array.isArray(data.Invitations)) {
-        // Fallback: if Invitations is present and is an array, use it
-        invitationsList = data.Invitations as Invitation[];
-      }
+  //     // API may return either an array of invitations directly
+  //     // or an object like { Status: 'Success', Invitations: [...] }
+  //     if (Array.isArray(data)) {
+  //       invitationsList = data as Invitation[];
+  //     } else if (
+  //       data &&
+  //       data.Status === "Success" &&
+  //       Array.isArray(data.Invitations)
+  //     ) {
+  //       invitationsList = data.Invitations as Invitation[];
+  //     } else if (data && Array.isArray(data.Invitations)) {
+  //       // Fallback: if Invitations is present and is an array, use it
+  //       invitationsList = data.Invitations as Invitation[];
+  //     }
 
-      // Filter to show only invitations with 'invited' status
-      const filteredInvitations = invitationsList.filter(
-        (inv) => inv.Status === "invited"
-      );
-      setInvitations(filteredInvitations);
-    } catch (err) {
-      console.error("GetInvitations error:", err);
-      setInvitations([]);
-    }
-  };
+  //     // Filter to show only invitations with 'invited' status
+  //     const filteredInvitations = invitationsList.filter(
+  //       (inv) => inv.Status === "invited"
+  //     );
+  //     setInvitations(filteredInvitations);
+  //   } catch (err) {
+  //     console.error("GetInvitations error:", err);
+  //     setInvitations([]);
+  //   }
+  // };
 
   useEffect(() => {
     GetSubs();
-    GetInvitations();
+    // GetInvitations();
   }, []);
 
   const EnterSub = async (serial: string) => {
@@ -114,39 +114,39 @@ export default function MySubs() {
     } catch (err) {}
   };
 
-  const HandleInvitationResponse = async (
-    invitationID: string,
-    accept: boolean
-  ) => {
-    try {
-      const endpoint = accept
-        ? "/api/subscriptions/invitation-accept"
-        : "/api/subscriptions/invitation-reject";
+  // const HandleInvitationResponse = async (
+  //   invitationID: string,
+  //   accept: boolean
+  // ) => {
+  //   try {
+  //     const endpoint = accept
+  //       ? "/api/subscriptions/invitation-accept"
+  //       : "/api/subscriptions/invitation-reject";
 
-      const res = await fetch(endpoint, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ invitation_id: invitationID }),
-      });
+  //     const res = await fetch(endpoint, {
+  //       method: "POST",
+  //       credentials: "include",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ invitation_id: invitationID }),
+  //     });
 
-      const data = await res.json();
-      if (data.Status === "Success") {
-        GetInvitations();
-        if (accept) {
-          GetSubs();
-        }
-      }
-    } catch (err) {
-      console.error("HandleInvitationResponse error:", err);
-    }
-  };
+  //     const data = await res.json();
+  //     if (data.Status === "Success") {
+  //       GetInvitations();
+  //       if (accept) {
+  //         GetSubs();
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error("HandleInvitationResponse error:", err);
+  //   }
+  // };
 
   return (
     <div className="my-5">
-      {invitations && invitations.length > 0 && (
+      {/* {invitations && invitations.length > 0 && (
         <>
           <div className="">
             <h2 className="text-lg font-bold text-gray-900">
@@ -220,7 +220,7 @@ export default function MySubs() {
             )}
           </div>
         </>
-      )}
+      )} */}
 
       <div className="mt-10">
         <h2 className="text-lg font-bold text-gray-900">اشتراک های من</h2>
