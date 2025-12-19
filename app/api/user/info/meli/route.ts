@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getClientIp } from "../../_utils";
+import { getClientIp } from "../../../_utils";
 
 export async function POST(req: NextRequest) {
     try {
