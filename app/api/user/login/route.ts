@@ -29,9 +29,9 @@ export async function POST(req: NextRequest) {
             response.cookies.set("LoggedUser", data.token, {
                 path: "/",
                 maxAge: 12 * 60 * 60, // 12 hours in seconds
-                httpOnly: true,
+                httpOnly: false,
                 secure: process.env.NODE_ENV === "production", // Secure in production only
-                sameSite: "lax", // Changed from Strict to Lax for better redirect compatibility
+                // sameSite: "lax", // Changed from Strict to Lax for better redirect compatibility
             });
             
             return response;
