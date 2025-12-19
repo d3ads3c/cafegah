@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
         formData.append("password", md5Password);
         
         // Use improved IP extraction utility
-        formData.append('ipaddress', "127.0.0.1");
+        formData.append('IPAddress', "127.0.0.1");
         console.log(formData)
         const upstreamResponse = await fetch("http://localhost:8000/user/login", {
             method: "POST",
