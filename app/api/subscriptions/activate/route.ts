@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
         // Use improved IP extraction utility
         const clientIp = getClientIp(req);
-        if (clientIp) formData.append('ipaddress', clientIp);
+        if (clientIp) formData.append('ipaddress', "127.0.0.1");
 
         // Forward client IP to upstream API via headers as well.
         // const forwardHeaders: Record<string, string> = {};

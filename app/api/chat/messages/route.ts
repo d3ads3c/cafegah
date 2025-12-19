@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
         // Forward to backend API using FormData
         const formData = new FormData();
         formData.append('token', 'dummy_token'); // Token is required in form but not used for authentication
-        if (clientIp) formData.append('ipaddress', clientIp);
+        if (clientIp) formData.append('ipaddress', "127.0.0.1");
         if (page) formData.append('page', page.toString());
         if (per_page) formData.append('per_page', per_page.toString());
 

@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
         // Use improved IP extraction utility
         const clientIp = getClientIp(req);
-        if (clientIp) formData.append('ipaddress', clientIp);
+        if (clientIp) formData.append('ipaddress', "127.0.0.1");
 
         // Fetch updates from backend API
         const response = await fetch("http://localhost:8000/updates/list", {

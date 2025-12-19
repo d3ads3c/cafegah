@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
             formData.append("user_email", user.email);
             formData.append("permissions", user.permissions.join(",") || "0");
             formData.append("token", loggedUser || "null");
-            if (clientIp) formData.append('ipaddress', clientIp);
+            if (clientIp) formData.append('ipaddress', "127.0.0.1");
 
             return fetch("http://localhost:8000/subscription/invite", {
                 method: "POST",

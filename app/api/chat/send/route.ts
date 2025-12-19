@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         const formData = new FormData();
         formData.append('message', message);
         formData.append('token', 'dummy_token'); // Token is required in form but not used for authentication
-        if (clientIp) formData.append('ipaddress', clientIp);
+        if (clientIp) formData.append('ipaddress', "127.0.0.1");
 
         // Forward ChatUserId cookie to backend
         console.log("Forwarding request to backend with ChatUserId:", chatUserId);

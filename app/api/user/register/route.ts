@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         
         // Use improved IP extraction utility
         const clientIp = getClientIp(req);
-        if (clientIp) formData.append('IPAddress', clientIp);
+        if (clientIp) formData.append('ipaddress', "127.0.0.1");
 
         const upstreamHeaders: Record<string, string> = {
             // let fetch set the Content-Type for FormData; but include Accept

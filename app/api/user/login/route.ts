@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
         
         // Use improved IP extraction utility
         const clientIp = getClientIp(req);
-        if (clientIp) formData.append('IPAddress', clientIp);
+        if (clientIp) formData.append('ipaddress', "127.0.0.1");
         console.log(formData)
         const upstreamResponse = await fetch("http://localhost:8000/user/login", {
             method: "POST",
