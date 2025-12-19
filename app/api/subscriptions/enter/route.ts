@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     // console.log(error)
     return NextResponse.json(
-      { message: "خطایی در سرور رخ داد" },
+      { message: "خطایی در سرور رخ" },
       { status: 500 }
     );
   }
