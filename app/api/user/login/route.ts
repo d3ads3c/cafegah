@@ -25,13 +25,22 @@ export async function POST(req: NextRequest) {
             // Use Next.js cookies API to properly set the cookie
             const response = NextResponse.json({ msg: "LoggedIn" }, { status: 200 });
             
-            // Set cookie using Next.js cookies API (more reliable in production)
+            // // Set cookie using Next.js cookies API (more reliable in production)
+            // response.cookies.set("LoggedUser", data.token, {
+            //     path: "/",
+            //     maxAge: 12 * 60 * 60, // 12 hours in seconds
+            //     httpOnly: false,
+            //     // secure: process.env.NODE_ENV === "production", // Secure in production only
+            //     // sameSite: "lax", // Changed from Strict to Lax for better redirect compatibility
+            // });
+             // Set cookie using Next.js cookies API (more reliable in production)
             response.cookies.set("LoggedUser", data.token, {
                 path: "/",
-                maxAge: 12 * 60 * 60, // 12 hours in seconds
-                httpOnly: false,
-                // secure: process.env.NODE_ENV === "production", // Secure in production only
-                // sameSite: "lax", // Changed from Strict to Lax for better redirect compatibility
+                maxAge: 12 * 60 * 60, // 12 hours
+                domain: ".cafegah.ir",
+                httpOnly: false,     // accessible from JS
+                sameSite: "none",    // REQUIRED for cross-domain
+                secure: true,        // REQUIRED when sameSite = "none"
             });
             
             return response;

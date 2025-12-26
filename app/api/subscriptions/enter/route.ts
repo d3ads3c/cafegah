@@ -41,7 +41,7 @@ formData.append("ipaddress", "127.0.0.1");
     if (backendData.Status === "Success") {
       return NextResponse.json(
         {
-          Link: "http://10.77.119.13:3255",
+          Link: process.env.ENTER_URL,
           Status: "Success",
         },
         { status: 200 }
